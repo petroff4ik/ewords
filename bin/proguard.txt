@@ -1,0 +1,15 @@
+# view AndroidManifest.xml #generated:7
+-keep class word.words.MainActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:15
+-keep class word.words.MainScreen { <init>(...); }
+
+# onClick res/layout/mainscreen.xml #generated:11
+-keepclassmembers class * { *** onButtonStart(...); }
+
+# onClick res/layout/mainscreen.xml #generated:23
+-keepclassmembers class * { *** quit(...); }
+
+# onClick res/layout/mainscreen.xml #generated:17
+-keepclassmembers class * { *** setting(...); }
+
