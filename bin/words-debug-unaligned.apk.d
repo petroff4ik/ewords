@@ -1,4 +1,3 @@
-C:\Users\petroff\Documents\NetBeansProjects\words\bin\words-debug-unaligned.apk : \
-C:\Users\petroff\Documents\NetBeansProjects\words\bin\words.ap_ \
-C:\Users\petroff\Documents\NetBeansProjects\words\bin\classes.dex \
-C:\Program Files (x86)\Android\android-sdk\tools\support\annotations.jar \
+/home/petroff/android_project/ewords/bin/words-debug-unaligned.apk : \
+/home/petroff/android_project/ewords/bin/words.ap_ \
+/home/petroff/android_project/ewords/bin/classes.dex \

@@ -12,7 +12,8 @@ public final class R {
     }
     public static final class drawable {
         public static final int bf=0x7f020000;
-        public static final int rect=0x7f020001;
+        public static final int list=0x7f020001;
+        public static final int rect=0x7f020002;
     }
     public static final class id {
         public static final int gvMain=0x7f050001;

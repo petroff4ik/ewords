@@ -1,9 +1,9 @@
-C:\Users\petroff\Documents\NetBeansProjects\words\gen\word\words\R.java \
- : C:\Users\petroff\Documents\NetBeansProjects\words\res\drawable\bf.png \
-C:\Users\petroff\Documents\NetBeansProjects\words\res\drawable\rect.xml \
-C:\Users\petroff\Documents\NetBeansProjects\words\res\layout\item.xml \
-C:\Users\petroff\Documents\NetBeansProjects\words\res\layout\main.xml \
-C:\Users\petroff\Documents\NetBeansProjects\words\res\layout\mainscreen.xml \
-C:\Users\petroff\Documents\NetBeansProjects\words\res\values\strings.xml \
-C:\Users\petroff\Documents\NetBeansProjects\words\bin\res\drawable\bf.png \
-C:\Users\petroff\Documents\NetBeansProjects\words\bin\AndroidManifest.xml \
+/home/petroff/android_project/ewords/gen/word/words/R.java \
+ : /home/petroff/android_project/ewords/res/layout/mainscreen.xml \
+/home/petroff/android_project/ewords/res/layout/item.xml \
+/home/petroff/android_project/ewords/res/layout/main.xml \
+/home/petroff/android_project/ewords/res/drawable/list \
+/home/petroff/android_project/ewords/res/drawable/bf.png \
+/home/petroff/android_project/ewords/res/drawable/rect.xml \
+/home/petroff/android_project/ewords/res/values/strings.xml \
+/home/petroff/android_project/ewords/AndroidManifest.xml \
