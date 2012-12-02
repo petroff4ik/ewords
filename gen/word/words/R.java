@@ -16,9 +16,11 @@ public final class R {
         public static final int rect=0x7f020002;
     }
     public static final class id {
-        public static final int gvMain=0x7f060001;
+        public static final int gvMain=0x7f060003;
         public static final int tvText=0x7f060000;
-        public static final int words_button_l=0x7f060002;
+        public static final int words_button_l=0x7f060004;
+        public static final int worldEncode=0x7f060001;
+        public static final int worldSrc=0x7f060002;
     }
     public static final class layout {
         public static final int item=0x7f030000;

@@ -4,6 +4,22 @@
  android:layout_width="match_parent"
  android:layout_height="match_parent"
  android:orientation="vertical">
+	 <TextView 
+	android:id="@+id/worldEncode"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:text=""
+	android:textSize="40sp"
+	android:textStyle="bold"
+    />
+	 <TextView 
+	android:id="@+id/worldSrc"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:text=""
+	android:textSize="40sp"
+	android:textStyle="bold"
+    />
     <GridView
  android:id="@+id/gvMain"
  android:layout_width="match_parent"

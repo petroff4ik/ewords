@@ -13,6 +13,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 import android.content.res.Configuration;
 import android.util.Log;
+import android.database.Cursor;
 
 public class MainActivity extends Activity {
 
@@ -28,8 +29,13 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		DBConnector db = new DBConnector(this);
-		wd = new WordsData(db);
-
+		wd = new WordsData(db, this);
+		TextView we = (TextView) findViewById(R.id.worldEncode);
+		TextView ws = (TextView) findViewById(R.id.worldSrc);
+		String WordEncode = wd.Reload();
+		String WordSrc = wd.getWordSrc();
+		we.setText(WordEncode);
+		ws.setText(WordSrc);
 		adapter = new ArrayAdapter<String>(this, R.layout.item, R.id.tvText, wd.getData());
 		gvMain = (GridView) findViewById(R.id.gvMain);
 		gvMain.setAdapter(adapter);

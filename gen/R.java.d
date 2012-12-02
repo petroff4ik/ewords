@@ -7,5 +7,4 @@
 /home/petroff/android_project/ewords/res/drawable/rect.xml \
 /home/petroff/android_project/ewords/res/values/strings.xml \
 /home/petroff/android_project/ewords/res/xml/prf.xml \
-/home/petroff/android_project/ewords/bin/res/drawable/bf.png \
 /home/petroff/android_project/ewords/AndroidManifest.xml \

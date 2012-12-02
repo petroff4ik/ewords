@@ -6,7 +6,6 @@ package word.words;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.widget.Toast;
 import android.view.View;
 import android.content.Intent;
 import android.app.AlertDialog;
@@ -30,7 +29,7 @@ public class MainScreen extends Activity {
 		startActivity(intent);
 	}
 
-	public void onQuit(View view) {
+	public void onBQuit(View view) {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setMessage("Are you sure you want to exit?").setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -46,5 +45,10 @@ public class MainScreen extends Activity {
 		});
 		AlertDialog alert = builder.create();
 		alert.show();
+	}
+
+	public void onBSetting(View view) {
+		Intent intent = new Intent(this, prf.class);
+		startActivity(intent);
 	}
 }

@@ -9,18 +9,23 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.content.Context;
 import android.database.Cursor;
 import android.content.ContentValues;
+import android.util.Log;
+import 	java.util.HashMap;
+import java.util.Map;
 
 public class DBConnector {
 
+	private static final String TAG = "DB";
 	// Данные базы данных и таблиц
 	private static final String DATABASE_NAME = "ewords.db";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 14;
 	private static final String TABLE_NAME = "words";
 	private static final String TABLE_NAME2 = "links";
 	// Название столбцов
 	private static final String COLUMN_ID = "_id";
 	private static final String COLUMN_WORD = "word";
 	private static final String COLUMN_TYPE = "type";
+	private static final String COLUMN_STATUS = "status";
 	private static final String COLUMN_PID = "pid";
 	private static final String COLUMN_TID = "tid";
 	private SQLiteDatabase mDataBase;
@@ -43,7 +48,8 @@ public class DBConnector {
 			String query = "CREATE TABLE " + TABLE_NAME + " ("
 					+ COLUMN_ID + " INTEGER PRIMARY KEY UNIQUE, "
 					+ COLUMN_WORD + " TEXT, "
-					+ COLUMN_TYPE + " VARCHAR(2)"
+					+ COLUMN_TYPE + " VARCHAR(2),"
+					+ COLUMN_STATUS + " VARCHAR(3) default 'no'"
 					+ "); ";
 			db.execSQL(query);
 			query = "CREATE TABLE " + TABLE_NAME2 + " ("
@@ -51,23 +57,118 @@ public class DBConnector {
 					+ COLUMN_TID + " INTEGER "
 					+ "); ";
 			db.execSQL(query);
+			ContentValues cv = new ContentValues();
+			cv.put(COLUMN_ID, 1);
+			cv.put(COLUMN_WORD, "get");
+			cv.put(COLUMN_TYPE, "en");
+			db.insert(TABLE_NAME, null, cv);
+
+			cv.put(COLUMN_ID, 2);
+			cv.put(COLUMN_WORD, "получать");
+			cv.put(COLUMN_TYPE, "ru");
+			db.insert(TABLE_NAME, null, cv);
+
+			cv.put(COLUMN_ID, 3);
+			cv.put(COLUMN_WORD, "иметь");
+			cv.put(COLUMN_TYPE, "ru");
+			db.insert(TABLE_NAME, null, cv);
+
+			ContentValues cv2 = new ContentValues();
+
+			cv2.put(COLUMN_PID, 1);
+			cv2.put(COLUMN_TID, 2);
+			db.insert(TABLE_NAME2, null, cv2);
+
+			cv2.put(COLUMN_PID, 1);
+			cv2.put(COLUMN_TID, 3);
+			db.insert(TABLE_NAME2, null, cv2);
+
+			// second words
+			cv.put(COLUMN_ID, 4);
+			cv.put(COLUMN_WORD, "give");
+			cv.put(COLUMN_TYPE, "en");
+			db.insert(TABLE_NAME, null, cv);
+
+			cv.put(COLUMN_ID, 5);
+			cv.put(COLUMN_WORD, "отдавать");
+			cv.put(COLUMN_TYPE, "ru");
+			db.insert(TABLE_NAME, null, cv);
+
+			cv.put(COLUMN_ID, 6);
+			cv.put(COLUMN_WORD, "давать");
+			cv.put(COLUMN_TYPE, "ru");
+			db.insert(TABLE_NAME, null, cv);
+
+			cv2.put(COLUMN_PID, 4);
+			cv2.put(COLUMN_TID, 5);
+			db.insert(TABLE_NAME2, null, cv2);
+
+			cv2.put(COLUMN_PID, 4);
+			cv2.put(COLUMN_TID, 6);
+			db.insert(TABLE_NAME2, null, cv2);
+
 		}
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
 			db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME2);
+			Log.v(TAG, "onUpgrade");
 			onCreate(db);
 		}
 	}
 
 	// Метод выборки одной записи
-	public Cursor select_words(long id) {
+	public String getWord(int id) {// TODO make check return value
 		Cursor mCursor = mDataBase.query(TABLE_NAME, null, COLUMN_ID + " = ?", new String[]{String.valueOf(id)}, null, null, COLUMN_ID);
-		return mCursor;
+		mCursor.moveToFirst();
+		String word = mCursor.getString(mCursor.getColumnIndexOrThrow(COLUMN_WORD));
+		mCursor.close();
+		return word;
+	}
+	
+	public Map getWordStatusNo(String lang) {// TODO make check return value
+		String sql = "select wsrc.word as wordSrc, wsrc._id as wordSrcId, words.* from words as wsrc, words, links where wsrc._id = links.pid and words._id = links.tid and wsrc.status = ? and wsrc.type = ?";
+		Cursor mCursor = mDataBase.rawQuery(sql, new String[]{"no", lang});
+		mCursor.moveToFirst();
+		String wordSrc = mCursor.getString(mCursor.getColumnIndexOrThrow("wordSrc"));
+		String word = mCursor.getString(mCursor.getColumnIndexOrThrow("word"));
+		Map<String, String> hashmap = new HashMap<String, String>();
+		hashmap.put("wordSrc", wordSrc);
+		hashmap.put("word", word);
+		mCursor.close();
+		return hashmap;
 	}
 
-	public long insert(String table_name,ContentValues cv) {
-		return mDataBase.insert(table_name, null, cv);
+	public Cursor rawQuery(String sql, String[] selectionArgs) {
+		Cursor res = mDataBase.rawQuery(sql, selectionArgs);
+		res.moveToFirst();
+
+		return res;
+	}
+
+	public Cursor rawQuery(String sql) {
+		Cursor res = mDataBase.rawQuery(sql, null);
+		res.moveToFirst();
+
+		return res;
+	}
+
+	public long insert(String table_name, ContentValues cv) {
+		long res = mDataBase.insert(table_name, null, cv);
+		return res;
+	}
+
+	public Integer getCountWords(String langSrc) {
+		Integer res = 0;
+		String sql = "SELECT COUNT() AS C FROM WORDS WHERE type = ?;";
+		Cursor resDb = rawQuery(sql);
+		try {
+			res = resDb.getInt(resDb.getColumnIndexOrThrow("C"));
+		} catch (Exception e) {
+			Log.v(TAG, "error");
+		}
+		resDb.close();
+		return res;
 	}
 }
