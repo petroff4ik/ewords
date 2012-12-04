@@ -10,7 +10,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.content.ContentValues;
 import android.util.Log;
-import 	java.util.HashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 public class DBConnector {
@@ -18,7 +18,7 @@ public class DBConnector {
 	private static final String TAG = "DB";
 	// Данные базы данных и таблиц
 	private static final String DATABASE_NAME = "ewords.db";
-	private static final int DATABASE_VERSION = 14;
+	private static final int DATABASE_VERSION = 15;
 	private static final String TABLE_NAME = "words";
 	private static final String TABLE_NAME2 = "links";
 	// Название столбцов
@@ -26,8 +26,8 @@ public class DBConnector {
 	private static final String COLUMN_WORD = "word";
 	private static final String COLUMN_TYPE = "type";
 	private static final String COLUMN_STATUS = "status";
-	private static final String COLUMN_PID = "pid";
-	private static final String COLUMN_TID = "tid";
+	private static final String COLUMN_PID = "w1id";
+	private static final String COLUMN_TID = "w2id";
 	private SQLiteDatabase mDataBase;
 
 	public DBConnector(Context context) {
@@ -126,16 +126,18 @@ public class DBConnector {
 		mCursor.close();
 		return word;
 	}
-	
+
 	public Map getWordStatusNo(String lang) {// TODO make check return value
-		String sql = "select wsrc.word as wordSrc, wsrc._id as wordSrcId, words.* from words as wsrc, words, links where wsrc._id = links.pid and words._id = links.tid and wsrc.status = ? and wsrc.type = ?";
+		String sql = "select wsrc.word as wordSrc, wsrc._id as wordSrcId, words.* from words as wsrc, words, links where (wsrc._id = links.w1id and words._id = links.w2id) and wsrc.status = ? and wsrc.type = ?";
 		Cursor mCursor = mDataBase.rawQuery(sql, new String[]{"no", lang});
-		mCursor.moveToFirst();
-		String wordSrc = mCursor.getString(mCursor.getColumnIndexOrThrow("wordSrc"));
-		String word = mCursor.getString(mCursor.getColumnIndexOrThrow("word"));
 		Map<String, String> hashmap = new HashMap<String, String>();
-		hashmap.put("wordSrc", wordSrc);
-		hashmap.put("word", word);
+		if (mCursor.getCount() > 0) {
+			mCursor.moveToFirst();
+			String wordSrc = mCursor.getString(mCursor.getColumnIndexOrThrow("wordSrc"));
+			String word = mCursor.getString(mCursor.getColumnIndexOrThrow("word"));
+			hashmap.put("wordSrc", wordSrc);
+			hashmap.put("word", word);
+		}
 		mCursor.close();
 		return hashmap;
 	}
