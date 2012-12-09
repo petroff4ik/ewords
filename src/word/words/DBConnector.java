@@ -173,4 +173,10 @@ public class DBConnector {
 		resDb.close();
 		return res;
 	}
+	
+	public void resetWords(String langSrc){
+		ContentValues s = new ContentValues();
+		s.put(COLUMN_STATUS, "no");
+		mDataBase.update(TABLE_NAME, s, " type = ? ", new String[]{langSrc});
+	}
 }

@@ -32,7 +32,7 @@ public class MainScreen extends Activity {
 	public void onBQuit(View view) {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Are you sure you want to exit?").setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+		builder.setMessage(R.string.qm).setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
 			public void onClick(DialogInterface dialog, int id) {
 				finish();

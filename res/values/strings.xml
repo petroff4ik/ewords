@@ -5,4 +5,6 @@
     <string name="start">Start</string>
     <string name="setting">Setting</string>
     <string name="quit">Quit</string>
+    <string name="words_ended">The words are over, reboot?</string>
+    <string name="qm">Are you sure you want to exit?</string>
 </resources>

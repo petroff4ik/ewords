@@ -17,7 +17,9 @@ public final class R {
     }
     public static final class id {
         public static final int gvMain=0x7f060003;
+        public static final int llToast=0x7f060005;
         public static final int tvText=0x7f060000;
+        public static final int tvTitleToast=0x7f060006;
         public static final int words_button_l=0x7f060004;
         public static final int worldEncode=0x7f060001;
         public static final int worldSrc=0x7f060002;
@@ -26,13 +28,16 @@ public final class R {
         public static final int item=0x7f030000;
         public static final int main=0x7f030001;
         public static final int mainscreen=0x7f030002;
+        public static final int toast=0x7f030003;
     }
     public static final class string {
         public static final int app_name=0x7f050000;
         public static final int main_screen=0x7f050001;
+        public static final int qm=0x7f050006;
         public static final int quit=0x7f050004;
         public static final int setting=0x7f050003;
         public static final int start=0x7f050002;
+        public static final int words_ended=0x7f050005;
     }
     public static final class xml {
         public static final int prf=0x7f040000;
