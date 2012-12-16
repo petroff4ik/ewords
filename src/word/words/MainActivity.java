@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
 	GridView gvMain;
 	ArrayAdapter<String> adapter;
 	private static final String TAG = "MainActivity";
-	String c = "";
+	//String c = "";
 	WordsData wd;
 	TextView we;
 	TextView ws;
@@ -84,21 +84,16 @@ public class MainActivity extends Activity {
 
 			public void onItemClick(AdapterView<?> parent, View v,
 					int position, long id) {
-				// TextView tv = (TextView) adapter.getView(position, v,
-				// parent);
+				String c = "";
 				LinearLayout ll = (LinearLayout) adapter.getView(position, v,
 						parent);
 				ll.setBackgroundColor(0x00000000);
 				TextView tv = (TextView) ll.getChildAt(0);
+				c = (String)tv.getText();
 				tv.setText("");
-				c = adapter.getItem(position);
 				if (wd.checkChar(c)) {
 					we.setText(wd.getWordEncode());
-					ws.setText(wd.getWordSrc());
 				} else {
-
-					// Toast toast = Toast.makeText(MainActivity.this, "",
-					// Toast.LENGTH_SHORT);
 					tt.setText(c);
 					toast.show();
 				}
@@ -113,9 +108,9 @@ public class MainActivity extends Activity {
 		// Проверяем ориентацию экрана
 		if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
 			Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
-			Log.v(TAG, c);
+	
 		} else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-			Log.v(TAG, c);
+
 			Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
 		}
 	}
