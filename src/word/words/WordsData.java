@@ -29,9 +29,13 @@ public class WordsData {
 	private String alph = "en";
 	private List<String> chooseChars = new ArrayList<String>();
 	private boolean availableWord = false;
+	private boolean newWords = false;
 	private static final String TAG = "WordsData";
-
 	Context c;
+
+	public boolean getNewWords() {
+		return this.newWords;
+	}
 
 	public String getWordTarget() {
 		return this.wordTarget;
@@ -51,14 +55,14 @@ public class WordsData {
 
 	public WordsData(DBConnector db, Context c) {
 		this.db = db;
-		hashmap.put("en", new String[] { "a", "b", "c", "d", "e", "f", "g",
-				"h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
-				"t", "u", "v", "w", "x", "y", "z" });
+		hashmap.put("en", new String[]{"a", "b", "c", "d", "e", "f", "g",
+					"h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
+					"t", "u", "v", "w", "x", "y", "z"});
 		hashmap.put("ru",
-				new String[] { "à", "á", "â", "ã", "ä", "å", "ç", "æ", "ê",
-						"ë", "ì", "í", "ð", "ï", "î", "å", "ñ", "ò", "ÿ", "÷",
-						"è", "ü", "þ", "é", "ö", "ó", "ø", "ç", "õ", "ý", "û",
-						"ô" });
+				new String[]{"Ð°", "Ð±", "Ð²", "Ð³", "Ð´", "Ðµ", "Ð·", "Ð¶", "Ðº",
+					"Ð»", "Ð¼", "Ð½", "Ñ€", "Ð¿", "Ð¾", "Ðµ", "Ñ", "Ñ‚", "Ñ", "Ñ‡",
+					"Ð¸", "ÑŒ", "ÑŽ", "Ð¹", "Ñ†", "Ñƒ", "Ñˆ", "Ð·", "Ñ…", "Ñ", "Ñ‹",
+					"Ñ„"});
 		countWords = db.getCountWords(langSrc);
 		Reload();
 
@@ -70,6 +74,10 @@ public class WordsData {
 
 	public void Reload() {
 		Map word = db.getWordStatusNo(langSrc);
+		chooseChars.removeAll(chooseChars);
+		wordSrc = "";
+		wordEncode = "";
+		wordTarget = "";
 		if (word.size() > 0) {
 			wordSrc = word.get("wordSrc").toString();
 			wordTarget = word.get("word").toString();
@@ -78,9 +86,6 @@ public class WordsData {
 			}
 			availableWord = true;
 		} else {
-			wordSrc = "";
-			wordEncode = "";
-			wordTarget = "";
 			availableWord = false;
 		}
 	}
@@ -100,12 +105,14 @@ public class WordsData {
 		String like = "";
 		for (int i = 0; i < size; i++) {
 			like = like + " words.word LIKE '%" + chooseChars.get(i) + "%' ";
-			if (i != (size - 1))
+			if (i != (size - 1)) {
 				like = like + " AND ";
+			}
 
 		}
 		if (like.isEmpty()) {
 			flag = false;
+			removeChars(c);
 		} else {
 			Map<String, String> word = db.getWordCheck(langSrc, wordSrc, like);
 			if (word.size() > 0) {
@@ -114,6 +121,7 @@ public class WordsData {
 				boolean findChars = false;
 				String ch = "";
 				Character cht;
+				newWords = true;
 				int ii;
 				for (int i = 1; i <= wordTarget.length(); i++) {
 					findChars = false;
@@ -122,7 +130,6 @@ public class WordsData {
 					cht = wordTarget.charAt(ii);
 					for (int i1 = 0; i1 < size; i1++) {
 						ch = chooseChars.get(i1);
-						Log.i(TAG,"" + cht.toString() + " " + ch);
 						if (ch.equals(cht.toString())) {
 							findChars = true;
 							break;
@@ -132,12 +139,13 @@ public class WordsData {
 						wordEncode = wordEncode.concat(ch);
 					} else {
 						wordEncode = wordEncode.concat("*");
+						newWords = false;
 					}
 				}
-				Log.i(TAG, wordTarget);
 				flag = true;
 			} else {
 				flag = false;
+				removeChars(c);
 			}
 
 		}
@@ -145,4 +153,7 @@ public class WordsData {
 
 	}
 
+	protected void removeChars(String c) {
+		chooseChars.remove(chooseChars.lastIndexOf(c));
+	}
 }

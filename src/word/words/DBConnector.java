@@ -16,12 +16,12 @@ import java.util.Map;
 public class DBConnector {
 
 	private static final String TAG = "DB";
-	// Данные базы данных и таблиц
+	// Р”Р°РЅРЅС‹Рµ Р±Р°Р·С‹ РґР°РЅРЅС‹С… Рё С‚Р°Р±Р»РёС†
 	private static final String DATABASE_NAME = "ewords.db";
-	private static final int DATABASE_VERSION = 18;
+	private static final int DATABASE_VERSION = 19;
 	private static final String TABLE_NAME = "words";
 	private static final String TABLE_NAME2 = "links";
-	// Название столбцов
+	// РќР°Р·РІР°РЅРёРµ СЃС‚РѕР»Р±С†РѕРІ
 	private static final String COLUMN_ID = "_id";
 	private static final String COLUMN_WORD = "word";
 	private static final String COLUMN_TYPE = "type";
@@ -31,13 +31,13 @@ public class DBConnector {
 	private SQLiteDatabase mDataBase;
 
 	public DBConnector(Context context) {
-		// открываем (или создаем и открываем) БД
-		// для записи и чтения
+		// РѕС‚РєСЂС‹РІР°РµРј (РёР»Рё СЃРѕР·РґР°РµРј Рё РѕС‚РєСЂС‹РІР°РµРј) Р‘Р”
+		// РґР»СЏ Р·Р°РїРёСЃРё Рё С‡С‚РµРЅРёСЏ
 		OpenHelper mOpenHelper = new OpenHelper(context);
 		mDataBase = mOpenHelper.getWritableDatabase();
 	}
 
-	// Класс для создания БД
+	// /data/data/word.words/databases/ewords.db
 	private class OpenHelper extends SQLiteOpenHelper {
 
 		OpenHelper(Context context) {
@@ -61,12 +61,12 @@ public class DBConnector {
 			db.insert(TABLE_NAME, null, cv);
 
 			cv.put(COLUMN_ID, 2);
-			cv.put(COLUMN_WORD, "��������");
+			cv.put(COLUMN_WORD, "получать");
 			cv.put(COLUMN_TYPE, "ru");
 			db.insert(TABLE_NAME, null, cv);
 
 			cv.put(COLUMN_ID, 3);
-			cv.put(COLUMN_WORD, "�����");
+			cv.put(COLUMN_WORD, "брать");
 			cv.put(COLUMN_TYPE, "ru");
 			db.insert(TABLE_NAME, null, cv);
 
@@ -95,12 +95,12 @@ public class DBConnector {
 			db.insert(TABLE_NAME, null, cv);
 
 			cv.put(COLUMN_ID, 5);
-			cv.put(COLUMN_WORD, "��������");
+			cv.put(COLUMN_WORD, "отдавать");
 			cv.put(COLUMN_TYPE, "ru");
 			db.insert(TABLE_NAME, null, cv);
 
 			cv.put(COLUMN_ID, 6);
-			cv.put(COLUMN_WORD, "������");
+			cv.put(COLUMN_WORD, "давать");
 			cv.put(COLUMN_TYPE, "ru");
 			db.insert(TABLE_NAME, null, cv);
 
@@ -129,6 +129,10 @@ public class DBConnector {
 			cv2.put(COLUMN_PID, 7);
 			cv2.put(COLUMN_TID, 2);
 			db.insert(TABLE_NAME2, null, cv2);
+			
+			cv2.put(COLUMN_PID, 2);
+			cv2.put(COLUMN_TID, 7);
+			db.insert(TABLE_NAME2, null, cv2);
 		}
 
 		@Override
@@ -140,7 +144,7 @@ public class DBConnector {
 		}
 	}
 
-	// Метод выборки одной записи
+	// РњРµС‚РѕРґ РІС‹Р±РѕСЂРєРё РѕРґРЅРѕР№ Р·Р°РїРёСЃРё
 	public String getWord(int id) {// TODO make check return value
 		Cursor mCursor = mDataBase.query(TABLE_NAME, null, COLUMN_ID + " = ?",
 				new String[] { String.valueOf(id) }, null, null, COLUMN_ID);

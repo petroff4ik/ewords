@@ -29,6 +29,7 @@ public class MainActivity extends Activity {
 	TextView ws;
 	TextView tt;
 	Toast toast;
+	Toast toastWin;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -92,6 +93,12 @@ public class MainActivity extends Activity {
 				c = (String)tv.getText();
 				tv.setText("");
 				if (wd.checkChar(c)) {
+					if(wd.getNewWords()){
+						Toast.makeText(getApplicationContext(), wd.getWordTarget(), Toast.LENGTH_SHORT).show();
+						wd.Reload();
+						adapter.notifyDataSetChanged();
+					}
+					ws.setText(wd.getWordSrc());
 					we.setText(wd.getWordEncode());
 				} else {
 					tt.setText(c);
