@@ -6,18 +6,20 @@ package word.words;
 
 import android.content.Context;
 import android.util.Log;
-
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.lang.String;
+import java.io.Serializable;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 /**
  * 
  * @author petroff
  */
-public class WordsData {
+public class WordsData implements Serializable {
 
 	Map<String, String[]> hashmap = new HashMap<String, String[]>();
 	DBConnector db;
@@ -31,7 +33,14 @@ public class WordsData {
 	private boolean availableWord = false;
 	private boolean newWords = false;
 	private static final String TAG = "WordsData";
+	protected boolean CharFindFlag = false;
 	Context c;
+	static SharedPreferences sp;
+	private String wrongChar;
+	
+	public String getWrongChar(){
+		return this.wrongChar;
+	}
 
 	public boolean getNewWords() {
 		return this.newWords;
@@ -54,7 +63,13 @@ public class WordsData {
 	}
 
 	public WordsData(DBConnector db, Context c) {
+		sp = PreferenceManager.getDefaultSharedPreferences(c);
+		initSrcLang();
 		this.db = db;
+		Restart();
+	}
+
+	public void Restart() {
 		hashmap.put("en", new String[]{"a", "b", "c", "d", "e", "f", "g",
 					"h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
 					"t", "u", "v", "w", "x", "y", "z"});
@@ -65,11 +80,20 @@ public class WordsData {
 					"ф"});
 		countWords = db.getCountWords(langSrc);
 		Reload();
-
 	}
 
 	public String[] getData() {
 		return hashmap.get(alph);
+	}
+
+	public String getData(int position) {
+		String[] chars = hashmap.get(alph);
+		return chars[position];
+	}
+
+	public void setData(String ch, int position) {
+		String[] chars = hashmap.get(alph);
+		chars[position] = ch;
 	}
 
 	public void Reload() {
@@ -85,6 +109,7 @@ public class WordsData {
 				wordEncode = wordEncode.concat("*");
 			}
 			availableWord = true;
+
 		} else {
 			availableWord = false;
 		}
@@ -98,9 +123,10 @@ public class WordsData {
 		db.resetWords(langSrc);
 	}
 
-	public boolean checkChar(String c) {
-		boolean flag = false;
+	public boolean checkChar(int position) {
+		String c = getData(position);
 		chooseChars.add(c);
+		wrongChar = "";
 		int size = chooseChars.size();
 		String like = "";
 		for (int i = 0; i < size; i++) {
@@ -111,7 +137,8 @@ public class WordsData {
 
 		}
 		if (like.isEmpty()) {
-			flag = false;
+			CharFindFlag = false;
+			setData("", position);
 			removeChars(c);
 		} else {
 			Map<String, String> word = db.getWordCheck(langSrc, wordSrc, like);
@@ -121,7 +148,6 @@ public class WordsData {
 				boolean findChars = false;
 				String ch = "";
 				Character cht;
-				newWords = true;
 				int ii;
 				for (int i = 1; i <= wordTarget.length(); i++) {
 					findChars = false;
@@ -137,23 +163,61 @@ public class WordsData {
 					}
 					if (findChars == true) {
 						wordEncode = wordEncode.concat(ch);
+
 					} else {
 						wordEncode = wordEncode.concat("*");
-						newWords = false;
 					}
 				}
-				flag = true;
+				CharFindFlag = true;
+				setData("", position);
 			} else {
-				flag = false;
+				CharFindFlag = false;
+				setData("", position);
+				wrongChar = c;
 				removeChars(c);
 			}
 
 		}
-		return flag;
+		if (wordEncode.indexOf("*")==-1) {
+			newWords = true;
+			db.update(wordSrc);
+		}else{
+			newWords = false;	
+		}
+		return CharFindFlag;
 
 	}
 
 	protected void removeChars(String c) {
 		chooseChars.remove(chooseChars.lastIndexOf(c));
+	}
+
+	public String GetChar(int position) {
+		return getData(position);
+	}
+
+	public int getColor(int position) {
+		String ch = getData(position);
+		if (ch.equals("")) {
+			return 0x00000000;
+		} else {
+			return 0xff0000ff;
+		}
+	}
+
+	public void nextWord() {
+		db.update(wordSrc);
+		Restart();
+	}
+
+	protected void initSrcLang() {
+		String srcLang = sp.getString("SL", "RU");
+		if (srcLang.equals("RU")) {
+			langSrc = "ru";
+			alph = "en";
+		} else {
+			langSrc = "en";
+			alph = "ru";
+		}
 	}
 }

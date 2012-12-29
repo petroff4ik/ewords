@@ -12,27 +12,25 @@ import android.content.ContentValues;
 import android.util.Log;
 import java.util.HashMap;
 import java.util.Map;
+import java.io.Serializable;
 
-public class DBConnector {
+public class DBConnector implements Serializable {
 
 	private static final String TAG = "DB";
-	// Р”Р°РЅРЅС‹Рµ Р±Р°Р·С‹ РґР°РЅРЅС‹С… Рё С‚Р°Р±Р»РёС†
 	private static final String DATABASE_NAME = "ewords.db";
-	private static final int DATABASE_VERSION = 19;
+	private static final int DATABASE_VERSION = 31;
 	private static final String TABLE_NAME = "words";
 	private static final String TABLE_NAME2 = "links";
-	// РќР°Р·РІР°РЅРёРµ СЃС‚РѕР»Р±С†РѕРІ
 	private static final String COLUMN_ID = "_id";
 	private static final String COLUMN_WORD = "word";
 	private static final String COLUMN_TYPE = "type";
 	private static final String COLUMN_STATUS = "status";
 	private static final String COLUMN_PID = "w1id";
 	private static final String COLUMN_TID = "w2id";
-	private SQLiteDatabase mDataBase;
+	private static SQLiteDatabase mDataBase;
 
 	public DBConnector(Context context) {
-		// РѕС‚РєСЂС‹РІР°РµРј (РёР»Рё СЃРѕР·РґР°РµРј Рё РѕС‚РєСЂС‹РІР°РµРј) Р‘Р”
-		// РґР»СЏ Р·Р°РїРёСЃРё Рё С‡С‚РµРЅРёСЏ
+
 		OpenHelper mOpenHelper = new OpenHelper(context);
 		mDataBase = mOpenHelper.getWritableDatabase();
 	}
@@ -40,12 +38,17 @@ public class DBConnector {
 	// /data/data/word.words/databases/ewords.db
 	private class OpenHelper extends SQLiteOpenHelper {
 
+		Context context;
+
 		OpenHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
+			this.context = context;
 		}
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
+			MyTask mt = new MyTask(context,db);
+			mt.execute();
 			String query = "CREATE TABLE " + TABLE_NAME + " (" + COLUMN_ID
 					+ " INTEGER PRIMARY KEY UNIQUE, " + COLUMN_WORD + " TEXT, "
 					+ COLUMN_TYPE + " VARCHAR(2)," + COLUMN_STATUS
@@ -54,85 +57,6 @@ public class DBConnector {
 			query = "CREATE TABLE " + TABLE_NAME2 + " (" + COLUMN_PID
 					+ " INTEGER, " + COLUMN_TID + " INTEGER " + "); ";
 			db.execSQL(query);
-			ContentValues cv = new ContentValues();
-			cv.put(COLUMN_ID, 1);
-			cv.put(COLUMN_WORD, "get");
-			cv.put(COLUMN_TYPE, "en");
-			db.insert(TABLE_NAME, null, cv);
-
-			cv.put(COLUMN_ID, 2);
-			cv.put(COLUMN_WORD, "получать");
-			cv.put(COLUMN_TYPE, "ru");
-			db.insert(TABLE_NAME, null, cv);
-
-			cv.put(COLUMN_ID, 3);
-			cv.put(COLUMN_WORD, "брать");
-			cv.put(COLUMN_TYPE, "ru");
-			db.insert(TABLE_NAME, null, cv);
-
-			ContentValues cv2 = new ContentValues();
-
-			cv2.put(COLUMN_PID, 1);
-			cv2.put(COLUMN_TID, 2);
-			db.insert(TABLE_NAME2, null, cv2);
-
-			cv2.put(COLUMN_PID, 1);
-			cv2.put(COLUMN_TID, 3);
-			db.insert(TABLE_NAME2, null, cv2);
-
-			cv2.put(COLUMN_PID, 2);
-			cv2.put(COLUMN_TID, 1);
-			db.insert(TABLE_NAME2, null, cv2);
-
-			cv2.put(COLUMN_PID, 3);
-			cv2.put(COLUMN_TID, 1);
-			db.insert(TABLE_NAME2, null, cv2);
-
-			// second words
-			cv.put(COLUMN_ID, 4);
-			cv.put(COLUMN_WORD, "give");
-			cv.put(COLUMN_TYPE, "en");
-			db.insert(TABLE_NAME, null, cv);
-
-			cv.put(COLUMN_ID, 5);
-			cv.put(COLUMN_WORD, "отдавать");
-			cv.put(COLUMN_TYPE, "ru");
-			db.insert(TABLE_NAME, null, cv);
-
-			cv.put(COLUMN_ID, 6);
-			cv.put(COLUMN_WORD, "давать");
-			cv.put(COLUMN_TYPE, "ru");
-			db.insert(TABLE_NAME, null, cv);
-
-			cv2.put(COLUMN_PID, 4);
-			cv2.put(COLUMN_TID, 5);
-			db.insert(TABLE_NAME2, null, cv2);
-
-			cv2.put(COLUMN_PID, 4);
-			cv2.put(COLUMN_TID, 6);
-			db.insert(TABLE_NAME2, null, cv2);
-
-			cv2.put(COLUMN_PID, 5);
-			cv2.put(COLUMN_TID, 4);
-			db.insert(TABLE_NAME2, null, cv2);
-
-			cv2.put(COLUMN_PID, 6);
-			cv2.put(COLUMN_TID, 4);
-			db.insert(TABLE_NAME2, null, cv2);
-			
-			//receive
-			cv.put(COLUMN_ID, 7);
-			cv.put(COLUMN_WORD, "receive");
-			cv.put(COLUMN_TYPE, "en");
-			db.insert(TABLE_NAME, null, cv);
-			
-			cv2.put(COLUMN_PID, 7);
-			cv2.put(COLUMN_TID, 2);
-			db.insert(TABLE_NAME2, null, cv2);
-			
-			cv2.put(COLUMN_PID, 2);
-			cv2.put(COLUMN_TID, 7);
-			db.insert(TABLE_NAME2, null, cv2);
 		}
 
 		@Override
@@ -144,27 +68,24 @@ public class DBConnector {
 		}
 	}
 
-	// РњРµС‚РѕРґ РІС‹Р±РѕСЂРєРё РѕРґРЅРѕР№ Р·Р°РїРёСЃРё
+
 	public String getWord(int id) {// TODO make check return value
 		Cursor mCursor = mDataBase.query(TABLE_NAME, null, COLUMN_ID + " = ?",
-				new String[] { String.valueOf(id) }, null, null, COLUMN_ID);
+				new String[]{String.valueOf(id)}, null, null, COLUMN_ID);
 		mCursor.moveToFirst();
-		String word = mCursor.getString(mCursor
-				.getColumnIndexOrThrow(COLUMN_WORD));
+		String word = mCursor.getString(mCursor.getColumnIndexOrThrow(COLUMN_WORD));
 		mCursor.close();
 		return word;
 	}
 
 	public Map getWordStatusNo(String lang) {// TODO make check return value
 		String sql = "select wsrc.word as wordSrc, wsrc._id as wordSrcId, words.* from words as wsrc, words, links where (wsrc._id = links.w1id and words._id = links.w2id) and wsrc.status = ? and wsrc.type = ?";
-		Cursor mCursor = mDataBase.rawQuery(sql, new String[] { "no", lang });
+		Cursor mCursor = mDataBase.rawQuery(sql, new String[]{"no", lang});
 		Map<String, String> hashmap = new HashMap<String, String>();
 		if (mCursor.getCount() > 0) {
 			mCursor.moveToFirst();
-			String wordSrc = mCursor.getString(mCursor
-					.getColumnIndexOrThrow("wordSrc"));
-			String word = mCursor.getString(mCursor
-					.getColumnIndexOrThrow("word"));
+			String wordSrc = mCursor.getString(mCursor.getColumnIndexOrThrow("wordSrc"));
+			String word = mCursor.getString(mCursor.getColumnIndexOrThrow("word"));
 			hashmap.put("wordSrc", wordSrc);
 			hashmap.put("word", word);
 		}
@@ -207,29 +128,34 @@ public class DBConnector {
 	public void resetWords(String langSrc) {
 		ContentValues s = new ContentValues();
 		s.put(COLUMN_STATUS, "no");
-		mDataBase.update(TABLE_NAME, s, " type = ? ", new String[] { langSrc });
+		mDataBase.update(TABLE_NAME, s, " type = ? ", new String[]{langSrc});
 	}
+	
 
 	public Map getWordCheck(String lang, String wordSrcSearch, String like) {// TODO
-																				// make
-																				// check
-																				// return
-																				// value
+		// make
+		// check
+		// return
+		// value
 		String sql = "select wsrc.word as wordSrc, wsrc._id as wordSrcId, words.* from words as wsrc, words, links where (wsrc._id = links.w1id and words._id = links.w2id) and wsrc.status = ? and wsrc.type = ?"
 				+ " AND  wsrc.word = ? AND " + like;
-		Cursor mCursor = mDataBase.rawQuery(sql, new String[] { "no", lang,
-				wordSrcSearch });
+		Cursor mCursor = mDataBase.rawQuery(sql, new String[]{"no", lang,
+					wordSrcSearch});
 		Map<String, String> hashmap = new HashMap<String, String>();
 		if (mCursor.getCount() > 0) {
 			mCursor.moveToFirst();
-			String wordSrc = mCursor.getString(mCursor
-					.getColumnIndexOrThrow("wordSrc"));
-			String word = mCursor.getString(mCursor
-					.getColumnIndexOrThrow("word"));
+			String wordSrc = mCursor.getString(mCursor.getColumnIndexOrThrow("wordSrc"));
+			String word = mCursor.getString(mCursor.getColumnIndexOrThrow("word"));
 			hashmap.put("wordSrc", wordSrc);
 			hashmap.put("word", word);
 		}
 		mCursor.close();
 		return hashmap;
+	}
+
+	public int update(String str) {
+		ContentValues cv = new ContentValues();
+		cv.put(COLUMN_STATUS, "yes");
+		return mDataBase.update(TABLE_NAME, cv, COLUMN_WORD + " = ?", new String[]{str});
 	}
 }

@@ -17,11 +17,14 @@ import android.content.DialogInterface;
  */
 public class MainScreen extends Activity {
 
-	/** Called when the activity is first created. */
+	private static final String TAG = "MainScreen";
+
+	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-		// ToDo add your GUI initialization code here 
 		setContentView(R.layout.mainscreen);
+		DBConnector db = new DBConnector(this);
+
 	}
 
 	public void onButtonStart(View view) {

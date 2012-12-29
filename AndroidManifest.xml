@@ -3,28 +3,27 @@
       package="word.words"
       android:versionCode="1"
       android:versionName="1.0">
-    <application android:label="@string/app_name" 
+	<application android:label="@string/app_name" 
 	android:icon="@drawable/list"
 	android:logo="@drawable/list"
 	>
-        <activity android:name="MainActivity"
-        android:configChanges="orientation|keyboardHidden"
+		<activity android:name="MainActivity"
                   android:label="@string/app_name">
                       
-            <intent-filter>
+			<intent-filter>
             
-            </intent-filter>
-        </activity>
-        <activity android:name="MainScreen"
+			</intent-filter>
+		</activity>
+		<activity android:name="MainScreen"
                   android:label="@string/main_screen">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-		 <activity
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity
 	    android:name=".prf"
 	    android:theme="@android:style/Theme.Black.NoTitleBar" >
-	  </activity>
-    </application>
+		</activity>
+	</application>
 </manifest> 

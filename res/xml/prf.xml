@@ -2,12 +2,25 @@
 <PreferenceScreen
 xmlns:android="http://schemas.android.com/apk/res/android">
 	<PreferenceCategory
-android:title="My Preference Category"/>
+android:title="Preference"/>
 	<CheckBoxPreference
-android:key="PREF_CHECK_BOX"
-android:title="Check Box Preference"
-android:summary="Check Box Preference Description"
+android:key="ST"
+android:title="Static"
+android:summary="Keep statistics"
 android:defaultValue="true"
 />
+<ListPreference
+                android:entries="@array/listOptions"
+                android:entryValues="@array/listValues"
+                android:key="SL"
+				android:defaultValue = "ru"
+                android:title="Source language" 
+				android:summary="Choose language"/>
+	<Preference
+		android:key="e"
+android:title="Development info"
+android:summary="Programming: Petroff"
+
+	/>			
 
 </PreferenceScreen>
