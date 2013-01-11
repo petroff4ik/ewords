@@ -19,24 +19,27 @@ public final class R {
         public static final int list=0x7f020001;
         public static final int ra=0x7f020002;
         public static final int rect=0x7f020003;
+        public static final int star=0x7f020004;
     }
     public static final class id {
-        public static final int gvMain=0x7f070004;
+        public static final int gvMain=0x7f070005;
         public static final int ll=0x7f070000;
-        public static final int llToast=0x7f070006;
+        public static final int llToast=0x7f070007;
+        public static final int star=0x7f070002;
         public static final int tvText=0x7f070001;
-        public static final int tvTitleToast=0x7f070007;
-        public static final int words_button_l=0x7f070005;
-        public static final int worldEncode=0x7f070002;
-        public static final int worldSrc=0x7f070003;
+        public static final int tvTitleToast=0x7f070008;
+        public static final int words_button_l=0x7f070006;
+        public static final int worldEncode=0x7f070003;
+        public static final int worldSrc=0x7f070004;
     }
     public static final class layout {
         public static final int item=0x7f030000;
         public static final int main=0x7f030001;
         public static final int mainscreen=0x7f030002;
-        public static final int toast=0x7f030003;
-        public static final int toastcng=0x7f030004;
-        public static final int toastwin=0x7f030005;
+        public static final int star=0x7f030003;
+        public static final int toast=0x7f030004;
+        public static final int toastcng=0x7f030005;
+        public static final int toastwin=0x7f030006;
     }
     public static final class string {
         public static final int app_name=0x7f060000;

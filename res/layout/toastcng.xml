@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/llToast"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 	 android:background="#D3D3D3"
     android:orientation="vertical" >
+	<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/llToast"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+		android:layout_marginTop="10dp"
+		android:layout_marginBottom="10dp"
+        android:background="#DAAA"
+        android:orientation="horizontal"
+        android:padding="10dp" >
 
-    <TextView
+		<TextView
         android:id="@+id/tvTitleToast"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="#FFFF00"
-        android:textSize="40sp"
+        android:textSize="35sp"
         android:textStyle="bold" >
-    </TextView>
-
+		</TextView>
+	</LinearLayout>
 </LinearLayout>

@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.io.Serializable;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 /**
@@ -27,6 +26,7 @@ public class WordsData implements Serializable {
 	private String wordSrc;
 	private String wordTarget;
 	private String wordEncode = "";
+	private String wordPrev = "";
 	private String langSrc = "ru";
 	private String alph = "en";
 	private List<String> chooseChars = new ArrayList<String>();
@@ -34,9 +34,17 @@ public class WordsData implements Serializable {
 	private boolean newWords = false;
 	private static final String TAG = "WordsData";
 	protected boolean CharFindFlag = false;
+	protected boolean statistic = false;
+	private int countStar = 0;
+	private int totalCountStar = 5;
 	Context c;
 	static SharedPreferences sp;
 	private String wrongChar;
+	
+	
+	public String getWordPrev(){
+		return this.wordPrev;
+	}		
 	
 	public String getWrongChar(){
 		return this.wrongChar;
@@ -61,11 +69,24 @@ public class WordsData implements Serializable {
 	public boolean getAvailableWord() {
 		return this.availableWord;
 	}
+	
+	public boolean getStaticFlag(){
+		return this.statistic;
+	}
+	
+	public int getTotalCountStar(){
+		return this.totalCountStar;
+	}
+	
+	public int getCountStar(){
+		return this.countStar;
+	}
 
 	public WordsData(DBConnector db, Context c) {
 		sp = PreferenceManager.getDefaultSharedPreferences(c);
 		initSrcLang();
 		this.db = db;
+		this.statistic = sp.getBoolean("ST", false);
 		Restart();
 	}
 
@@ -102,6 +123,7 @@ public class WordsData implements Serializable {
 		wordSrc = "";
 		wordEncode = "";
 		wordTarget = "";
+		countStar = 0;
 		if (word.size() > 0) {
 			wordSrc = word.get("wordSrc").toString();
 			wordTarget = word.get("word").toString();
@@ -180,10 +202,28 @@ public class WordsData implements Serializable {
 		}
 		if (wordEncode.indexOf("*")==-1) {
 			newWords = true;
+			wordPrev = wordTarget;
 			db.update(wordSrc);
 		}else{
 			newWords = false;	
 		}
+		
+		if(statistic == true){
+			if(CharFindFlag){
+				if(countStar > totalCountStar){
+					countStar = totalCountStar;
+				}else{
+					countStar++;
+				}
+			}else{
+				if(countStar > 0){
+					countStar--;
+				}else{
+					countStar = 0;
+				}
+			}
+		}
+		
 		return CharFindFlag;
 
 	}

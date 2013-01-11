@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.content.Intent;
 import android.widget.GridView;
-import android.widget.Toast;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
@@ -15,6 +14,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
+import android.widget.LinearLayout;
+import android.view.LayoutInflater;
+import android.widget.ImageView;
 
 public class MainActivity extends Activity {
 
@@ -25,6 +27,7 @@ public class MainActivity extends Activity {
 	TextView we;
 	TextView ws;
 	MyToast myToast;
+	LinearLayout llstar;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -60,6 +63,14 @@ public class MainActivity extends Activity {
 			alert.show();
 		}
 
+		llstar = (LinearLayout) findViewById(R.id.star);
+		if (wd.getStaticFlag()) {
+			initStar();
+			llstar.setVisibility(llstar.VISIBLE);
+		} else {
+			llstar.setVisibility(llstar.GONE);
+		}
+
 		myToast = new MyToast(this);
 		we = (TextView) findViewById(R.id.worldEncode);
 		ws = (TextView) findViewById(R.id.worldSrc);
@@ -75,14 +86,24 @@ public class MainActivity extends Activity {
 					int position, long id) {
 
 				if (wd.checkChar(position)) {
+					if (wd.getStaticFlag()) {
+						reloadStar();
+					}
 					if (wd.getNewWords()) {
 						wd.Restart();
 						isNewWorld();
+						if (wd.getStaticFlag()) {
+							cleanStar();
+						}
 					}
 					setText(wd.getWordEncode(), wd.getWordSrc());
 				} else {
+					if (wd.getStaticFlag()) {
+						reloadStar();
+					}
 					myToast.showCharToast(wd.getWrongChar());
 				}
+
 				adapter.notifyDataSetChanged();
 
 			}
@@ -137,7 +158,36 @@ public class MainActivity extends Activity {
 			myToast.showCng();
 			startActivity(intent);
 		} else {
-			myToast.showRightWord(wd.getWordTarget());
+			myToast.showRightWord(wd.getWordPrev());
+		}
+	}
+
+	public void initStar() {
+		LayoutInflater ltInflater = getLayoutInflater();
+		for (int i = 1; i <= wd.getTotalCountStar(); i++) {
+			ImageView star = (ImageView) ltInflater.inflate(R.layout.star, null, false);
+
+			star.setTag("star" + i);
+			star.setVisibility(star.INVISIBLE);
+			llstar.addView(star);
+		}
+	}
+
+	public void reloadStar() {
+
+		for (int i = 1; i <= wd.getTotalCountStar(); i++) {
+			if (i <= wd.getCountStar()) {
+				llstar.findViewWithTag("star" + i).setVisibility(llstar.findViewWithTag("star" + i).VISIBLE);
+			} else {
+				llstar.findViewWithTag("star" + i).setVisibility(llstar.findViewWithTag("star" + i).INVISIBLE);
+			}
+		}
+
+	}
+
+	public void cleanStar() {
+		for (int i = 1; i <= wd.getTotalCountStar(); i++) {
+			llstar.findViewWithTag("star" + i).setVisibility(llstar.findViewWithTag("star" + i).INVISIBLE);
 		}
 	}
 }

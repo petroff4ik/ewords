@@ -5,7 +5,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
 android:title="Preference"/>
 	<CheckBoxPreference
 android:key="ST"
-android:title="Static"
+android:title="Statistic"
 android:summary="Keep statistics"
 android:defaultValue="true"
 />
