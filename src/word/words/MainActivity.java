@@ -17,6 +17,7 @@ import android.view.MenuItem.OnMenuItemClickListener;
 import android.widget.LinearLayout;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
+import 	android.view.Window;
 
 public class MainActivity extends Activity {
 
@@ -33,7 +34,9 @@ public class MainActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.main);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
 		DBConnector db = new DBConnector(this);
 		wd = new WordsData(db, this);
 

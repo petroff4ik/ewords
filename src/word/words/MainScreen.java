@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import 	android.view.Window;
 
 /**
  *
@@ -26,7 +27,9 @@ public class MainScreen extends Activity {
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
+		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.mainscreen);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
 		DBConnector db = new DBConnector(this);
 		show_score();
 	}
