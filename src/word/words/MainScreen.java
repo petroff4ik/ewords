@@ -10,6 +10,10 @@ import android.view.View;
 import android.content.Intent;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /**
  *
@@ -24,7 +28,26 @@ public class MainScreen extends Activity {
 		super.onCreate(icicle);
 		setContentView(R.layout.mainscreen);
 		DBConnector db = new DBConnector(this);
+		show_score();
+	}
 
+	public void onResume() {
+		super.onResume();
+		show_score();
+	}
+
+	public void show_score() {
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+		boolean st = sp.getBoolean("ST", false);
+		LinearLayout ll = (LinearLayout) findViewById(R.id.you_score_l);
+		if (st) {
+			TextView tv = (TextView) findViewById(R.id.you_score_d);
+			Integer score = sp.getInt("SCORE", 0);
+			tv.setText(score.toString());
+			ll.setVisibility(ll.VISIBLE);
+		} else {
+			ll.setVisibility(ll.INVISIBLE);
+		}
 	}
 
 	public void onButtonStart(View view) {

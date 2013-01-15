@@ -24,13 +24,15 @@ public final class R {
     public static final class id {
         public static final int gvMain=0x7f070005;
         public static final int ll=0x7f070000;
-        public static final int llToast=0x7f070007;
+        public static final int llToast=0x7f070009;
         public static final int star=0x7f070002;
         public static final int tvText=0x7f070001;
-        public static final int tvTitleToast=0x7f070008;
+        public static final int tvTitleToast=0x7f07000a;
         public static final int words_button_l=0x7f070006;
         public static final int worldEncode=0x7f070003;
         public static final int worldSrc=0x7f070004;
+        public static final int you_score_d=0x7f070008;
+        public static final int you_score_l=0x7f070007;
     }
     public static final class layout {
         public static final int item=0x7f030000;
@@ -50,6 +52,7 @@ public final class R {
         public static final int setting=0x7f060003;
         public static final int start=0x7f060002;
         public static final int words_ended=0x7f060005;
+        public static final int you_score=0x7f060008;
     }
     public static final class xml {
         public static final int dictionary=0x7f040000;

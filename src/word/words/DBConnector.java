@@ -18,7 +18,7 @@ public class DBConnector implements Serializable {
 
 	private static final String TAG = "DB";
 	private static final String DATABASE_NAME = "ewords.db";
-	private static final int DATABASE_VERSION = 31;
+	private static final int DATABASE_VERSION = 38;
 	private static final String TABLE_NAME = "words";
 	private static final String TABLE_NAME2 = "links";
 	private static final String COLUMN_ID = "_id";
@@ -52,7 +52,8 @@ public class DBConnector implements Serializable {
 			String query = "CREATE TABLE " + TABLE_NAME + " (" + COLUMN_ID
 					+ " INTEGER PRIMARY KEY UNIQUE, " + COLUMN_WORD + " TEXT, "
 					+ COLUMN_TYPE + " VARCHAR(2)," + COLUMN_STATUS
-					+ " VARCHAR(3) default 'no'" + "); ";
+					+ " VARCHAR(3) default 'no'" + "); "
+					+ "CREATE INDEX word_idx on test (word);";
 			db.execSQL(query);
 			query = "CREATE TABLE " + TABLE_NAME2 + " (" + COLUMN_PID
 					+ " INTEGER, " + COLUMN_TID + " INTEGER " + "); ";
@@ -79,7 +80,7 @@ public class DBConnector implements Serializable {
 	}
 
 	public Map getWordStatusNo(String lang) {// TODO make check return value
-		String sql = "select wsrc.word as wordSrc, wsrc._id as wordSrcId, words.* from words as wsrc, words, links where (wsrc._id = links.w1id and words._id = links.w2id) and wsrc.status = ? and wsrc.type = ?";
+		String sql = "select wsrc.word as wordSrc, wsrc._id as wordSrcId, words.* from words as wsrc, words, links where (wsrc._id = links.w1id and words._id = links.w2id) and wsrc.status = ? and wsrc.type = ?  ORDER BY RANDOM() LIMIT 1";
 		Cursor mCursor = mDataBase.rawQuery(sql, new String[]{"no", lang});
 		Map<String, String> hashmap = new HashMap<String, String>();
 		if (mCursor.getCount() > 0) {

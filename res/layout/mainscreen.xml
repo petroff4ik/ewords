@@ -8,23 +8,52 @@
     android:background="@drawable/bf"
     >
    
-    <Button
+	<Button
      android:layout_height="wrap_content"
      android:layout_width="wrap_content"
      android:text="@string/start"
      android:textSize="30dp"
      android:onClick="onButtonStart" />
-    <Button
+	<Button
      android:layout_height="wrap_content"
      android:layout_width="wrap_content"
      android:text="@string/setting"
      android:textSize="30dp"
      android:onClick="onBSetting" />
-    <Button
+	<Button
      android:layout_height="wrap_content"
      android:layout_width="wrap_content"
      android:text="@string/quit"
      android:textSize="30dp"
      android:onClick="onBQuit" />
+	 
+	<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/you_score_l"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:layout_marginTop="20dp"
+	android:gravity="center"
+	android:visibility="gone"
+	android:orientation="horizontal">
+	 <TextView 
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content" 
+    android:text="@string/you_score"
+	android:textColor="#000000"
+	android:textStyle="bold"
+	android:textSize="25sp"
+    />
+	 <TextView 
+	android:id="@+id/you_score_d" 
+    android:layout_width="wrap_content" 
+    android:layout_height="wrap_content" 
+    android:text=""
+	android:textColor="#000000"
+	android:textSize="25sp"
+	android:textStyle="bold"
+    />
+		
+	</LinearLayout> 
 </LinearLayout>
 

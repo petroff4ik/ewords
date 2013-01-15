@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.io.Serializable;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.content.SharedPreferences.Editor;
 
 /**
  * 
@@ -37,16 +38,16 @@ public class WordsData implements Serializable {
 	protected boolean statistic = false;
 	private int countStar = 0;
 	private int totalCountStar = 5;
+	private int totalScore = 0;
 	Context c;
 	static SharedPreferences sp;
 	private String wrongChar;
-	
-	
-	public String getWordPrev(){
+
+	public String getWordPrev() {
 		return this.wordPrev;
-	}		
-	
-	public String getWrongChar(){
+	}
+
+	public String getWrongChar() {
 		return this.wrongChar;
 	}
 
@@ -69,16 +70,16 @@ public class WordsData implements Serializable {
 	public boolean getAvailableWord() {
 		return this.availableWord;
 	}
-	
-	public boolean getStaticFlag(){
+
+	public boolean getStaticFlag() {
 		return this.statistic;
 	}
-	
-	public int getTotalCountStar(){
+
+	public int getTotalCountStar() {
 		return this.totalCountStar;
 	}
-	
-	public int getCountStar(){
+
+	public int getCountStar() {
 		return this.countStar;
 	}
 
@@ -87,6 +88,7 @@ public class WordsData implements Serializable {
 		initSrcLang();
 		this.db = db;
 		this.statistic = sp.getBoolean("ST", false);
+		this.totalScore = sp.getInt("SCORE", 0);
 		Restart();
 	}
 
@@ -200,30 +202,35 @@ public class WordsData implements Serializable {
 			}
 
 		}
-		if (wordEncode.indexOf("*")==-1) {
+		if (wordEncode.indexOf("*") == -1) {
 			newWords = true;
 			wordPrev = wordTarget;
 			db.update(wordSrc);
-		}else{
-			newWords = false;	
+		} else {
+			newWords = false;
 		}
-		
-		if(statistic == true){
-			if(CharFindFlag){
-				if(countStar > totalCountStar){
+
+		if (statistic == true) {
+			if (CharFindFlag) {
+				totalScore++;
+				if (countStar > totalCountStar) {
 					countStar = totalCountStar;
-				}else{
+				} else {
 					countStar++;
 				}
-			}else{
-				if(countStar > 0){
+			} else {
+				totalScore--;
+				if (countStar > 0) {
 					countStar--;
-				}else{
+				} else {
 					countStar = 0;
 				}
 			}
+			Editor ed = sp.edit();
+			ed.putInt("SCORE", totalScore);
+			ed.commit();
 		}
-		
+
 		return CharFindFlag;
 
 	}

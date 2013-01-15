@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import org.xmlpull.v1.XmlPullParser;
 import android.widget.Toast;
 import android.content.ContentValues;
+import android.util.Log;
 
 /**
  *
@@ -24,6 +25,8 @@ class MyTask extends AsyncTask<Void, Integer, Void> {
 	ProgressDialog mProgressDialog;
 	static final int IDD__HORIZONTAL_PROGRESS = 0;
 	static final int IDD_WHEEL_PROGRESS = 1;
+	private static final String TAG = "MyTask";
+	private int dMax = 10000;
 
 	MyTask(Context context, SQLiteDatabase db) {
 		super();
@@ -56,6 +59,7 @@ class MyTask extends AsyncTask<Void, Integer, Void> {
 	protected void onPreExecute() {
 		super.onPreExecute();
 		onCreateDialog(0);
+		mProgressDialog.setMax(dMax);
 		mProgressDialog.show();
 		mProgressDialog.setProgress(0);
 	}
@@ -70,8 +74,8 @@ class MyTask extends AsyncTask<Void, Integer, Void> {
 			while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
 				if (parser.getEventType() == XmlPullParser.START_TAG
 						&& parser.getName().equals("word")) {
-					word.put("_id", parser.getAttributeValue(2));
-					word.put("word", parser.getAttributeValue(1));
+					word.put("_id", parser.getAttributeValue(3));
+					word.put("word", parser.getAttributeValue(2));
 					word.put("type", parser.getAttributeValue(0));
 					db.insert("words", null, word);
 				} else if (parser.getEventType() == XmlPullParser.START_TAG
@@ -83,8 +87,10 @@ class MyTask extends AsyncTask<Void, Integer, Void> {
 					link.put("w2id", parser.getAttributeValue(0));
 					db.insert("links", null, link);
 				}
+
 				i++;
 				publishProgress(i);
+
 				parser.next();
 			}
 		} catch (Throwable t) {
@@ -101,14 +107,15 @@ class MyTask extends AsyncTask<Void, Integer, Void> {
 	@Override
 	protected void onPostExecute(Void result) {
 		super.onPostExecute(result);
-		mProgressDialog.setProgress(100);
+		mProgressDialog.setProgress(dMax);
 		mProgressDialog.cancel();
 
 	}
+
 	@Override
 	protected void onProgressUpdate(Integer... progress) {
 		super.onProgressUpdate();
 		mProgressDialog.setProgress(progress[0]);
-		
+
 	}
 }
