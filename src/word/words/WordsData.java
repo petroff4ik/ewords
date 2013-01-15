@@ -152,6 +152,7 @@ public class WordsData implements Serializable {
 		chooseChars.add(c);
 		wrongChar = "";
 		int size = chooseChars.size();
+		CharFindFlag = false;
 		String like = "";
 		for (int i = 0; i < size; i++) {
 			like = like + " words.word LIKE '%" + chooseChars.get(i) + "%' ";
@@ -161,7 +162,6 @@ public class WordsData implements Serializable {
 
 		}
 		if (like.isEmpty()) {
-			CharFindFlag = false;
 			setData("", position);
 			removeChars(c);
 		} else {
@@ -187,15 +187,14 @@ public class WordsData implements Serializable {
 					}
 					if (findChars == true) {
 						wordEncode = wordEncode.concat(ch);
-
+						CharFindFlag = true;
 					} else {
 						wordEncode = wordEncode.concat("*");
 					}
 				}
-				CharFindFlag = true;
+				
 				setData("", position);
 			} else {
-				CharFindFlag = false;
 				setData("", position);
 				wrongChar = c;
 				removeChars(c);
@@ -253,6 +252,7 @@ public class WordsData implements Serializable {
 	}
 
 	public void nextWord() {
+		wordPrev = wordTarget;
 		db.update(wordSrc);
 		Restart();
 	}
