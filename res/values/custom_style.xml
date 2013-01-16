@@ -5,7 +5,7 @@
     </style>
  
     <style name="CustomTheme" parent="android:Theme">
-        <item name="android:windowTitleSize">35dip</item>
+        <item name="android:windowTitleSize">20dip</item>
         <item name="android:windowTitleBackgroundStyle">@style/CustomWindowTitleBackground</item>
     </style>
 </resources>

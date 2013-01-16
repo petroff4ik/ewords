@@ -147,6 +147,7 @@ public class MainActivity extends Activity {
 				wd.nextWord();
 				isNewWorld();
 				setText(wd.getWordEncode(), wd.getWordSrc());
+				cleanStar();
 				adapter.notifyDataSetChanged();
 				return true;
 			}
