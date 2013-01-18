@@ -17,7 +17,12 @@ import android.view.MenuItem.OnMenuItemClickListener;
 import android.widget.LinearLayout;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
-import 	android.view.Window;
+import android.view.Window;
+import android.media.AudioManager;
+import android.media.SoundPool;
+import android.media.SoundPool.OnLoadCompleteListener;
+import android.os.Vibrator;
+import android.content.Context;
 
 public class MainActivity extends Activity {
 
@@ -29,6 +34,12 @@ public class MainActivity extends Activity {
 	TextView ws;
 	MyToast myToast;
 	LinearLayout llstar;
+	private SoundPool soundPool;
+	private int soundWin;
+	private int soundLose;
+	private int soundApp;
+	boolean loaded = false;
+
 
 	/** Called when the activity is first created. */
 	@Override
@@ -39,6 +50,23 @@ public class MainActivity extends Activity {
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
 		DBConnector db = new DBConnector(this);
 		wd = new WordsData(db, this);
+		if (wd.getPreferenceSound()) {
+			//init sound
+			this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
+			soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+			soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
+
+				@Override
+				public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+					loaded = true;
+				}
+			});
+
+			//Загружаем звуки в память
+			soundWin = soundPool.load(this, R.raw.soundwin, 1);
+			soundLose = soundPool.load(this, R.raw.soundlose, 1);
+			soundApp = soundPool.load(this, R.raw.soundapp, 1);
+		}
 
 		if (wd.getAvailableWord() == false) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -93,18 +121,21 @@ public class MainActivity extends Activity {
 						reloadStar();
 					}
 					if (wd.getNewWords()) {
+						play_sound("app");
 						wd.Restart();
 						isNewWorld();
 						if (wd.getStaticFlag()) {
 							cleanStar();
 						}
 					}
+					play_sound("win");
 					setText(wd.getWordEncode(), wd.getWordSrc());
 				} else {
 					if (wd.getStaticFlag()) {
 						reloadStar();
 					}
 					myToast.showCharToast(wd.getWrongChar());
+					play_sound("lose");
 				}
 
 				adapter.notifyDataSetChanged();
@@ -192,6 +223,27 @@ public class MainActivity extends Activity {
 	public void cleanStar() {
 		for (int i = 1; i <= wd.getTotalCountStar(); i++) {
 			llstar.findViewWithTag("star" + i).setVisibility(llstar.findViewWithTag("star" + i).INVISIBLE);
+		}
+	}
+
+	public void play_sound(String type) {
+		if (wd.getPreferenceSound()) {
+			AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+			float actualVolume = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+			float maxVolume = (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+			float volume = actualVolume / maxVolume;
+			// Is the sound loaded already?
+			if (type.equals("win")) {
+				soundPool.play(soundWin, volume, volume, 1, 0, 1f);
+			} else if (type.equals("lose")) {
+				soundPool.play(soundLose, volume, volume, 1, 0, 1f);
+			} else if (type.equals("app")) {
+				soundPool.play(soundApp, volume, volume, 1, 0, 1f);
+			}
+
+			Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+			long milliseconds = 100;
+			v.vibrate(milliseconds);
 		}
 	}
 }

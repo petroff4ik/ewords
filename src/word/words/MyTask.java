@@ -40,14 +40,14 @@ class MyTask extends AsyncTask<Void, Integer, Void> {
 				mProgressDialog = new ProgressDialog(
 						context);
 				mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL); // устанавливаем стиль
-				mProgressDialog.setMessage("Загружаю. Подождите...");  // задаем текст
+				mProgressDialog.setMessage("Load. Wait...");  // задаем текст
 				return mProgressDialog;
 
 			case IDD_WHEEL_PROGRESS:
 				mProgressDialog = new ProgressDialog(
 						context);
 				mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-				mProgressDialog.setMessage("Загружаю. Подождите...");
+				mProgressDialog.setMessage("Load. Wait...");
 				return mProgressDialog;
 
 			default:

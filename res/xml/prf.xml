@@ -9,7 +9,13 @@ android:title="Statistic"
 android:summary="Keep statistics"
 android:defaultValue="true"
 />
-<ListPreference
+	<CheckBoxPreference
+android:key="SOUND"
+android:title="Sound/Vibro"
+android:summary="Turn on/off sound/vibro"
+android:defaultValue="false"
+/>
+	<ListPreference
                 android:entries="@array/listOptions"
                 android:entryValues="@array/listValues"
                 android:key="SL"

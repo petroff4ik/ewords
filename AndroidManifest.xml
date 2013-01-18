@@ -3,6 +3,11 @@
       package="word.words"
       android:versionCode="1"
       android:versionName="1.0">
+	<uses-permission android:name="android.permission.VIBRATE"/>
+	<uses-feature android:name="there.isnt.a.vibrate.feature" android:required="false" />
+	<uses-sdk android:minSdkVersion="8" 
+          android:targetSdkVersion="9"
+          android:maxSdkVersion="14" />
 	<application android:label="@string/app_name" 
 	android:icon="@drawable/list"
 	android:logo="@drawable/list"
@@ -26,5 +31,6 @@
 	    android:name=".prf"
 	    android:theme="@android:style/Theme.Black.NoTitleBar" >
 		</activity>
+		
 	</application>
 </manifest> 

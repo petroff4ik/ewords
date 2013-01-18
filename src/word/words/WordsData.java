@@ -39,9 +39,14 @@ public class WordsData implements Serializable {
 	private int countStar = 0;
 	private int totalCountStar = 5;
 	private int totalScore = 0;
+	private boolean preferenceSound = false;
 	Context c;
 	static SharedPreferences sp;
 	private String wrongChar;
+
+	public boolean getPreferenceSound() {
+		return this.preferenceSound;
+	}
 
 	public String getWordPrev() {
 		return this.wordPrev;
@@ -89,6 +94,7 @@ public class WordsData implements Serializable {
 		this.db = db;
 		this.statistic = sp.getBoolean("ST", false);
 		this.totalScore = sp.getInt("SCORE", 0);
+		this.preferenceSound = sp.getBoolean("SOUND", false);
 		Restart();
 	}
 
@@ -192,7 +198,7 @@ public class WordsData implements Serializable {
 						wordEncode = wordEncode.concat("*");
 					}
 				}
-				
+
 				setData("", position);
 			} else {
 				setData("", position);
