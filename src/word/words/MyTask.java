@@ -13,6 +13,8 @@ import org.xmlpull.v1.XmlPullParser;
 import android.widget.Toast;
 import android.content.ContentValues;
 import android.util.Log;
+import android.content.pm.ActivityInfo;
+import android.app.Activity;
 
 /**
  *
@@ -58,6 +60,8 @@ class MyTask extends AsyncTask<Void, Integer, Void> {
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
+		Activity activity = (Activity) context;
+		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 		onCreateDialog(0);
 		mProgressDialog.setMax(dMax);
 		mProgressDialog.show();
@@ -70,7 +74,7 @@ class MyTask extends AsyncTask<Void, Integer, Void> {
 			XmlPullParser parser = context.getResources().getXml(R.xml.dictionary);
 			ContentValues word = new ContentValues();
 			ContentValues link = new ContentValues();
-			int i = 0;
+			Integer i = 0;
 			while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
 				if (parser.getEventType() == XmlPullParser.START_TAG
 						&& parser.getName().equals("word")) {
@@ -95,7 +99,7 @@ class MyTask extends AsyncTask<Void, Integer, Void> {
 			}
 		} catch (Throwable t) {
 			Toast.makeText(context,
-					"Ошибка при загрузке XML-документа: " + t.toString(), 4000).show();
+					"Errors upload words: " + t.toString(), 4000).show();
 		}
 
 
@@ -109,13 +113,19 @@ class MyTask extends AsyncTask<Void, Integer, Void> {
 		super.onPostExecute(result);
 		mProgressDialog.setProgress(dMax);
 		mProgressDialog.cancel();
-
+		Activity activity = (Activity) context;
+		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 	}
 
 	@Override
 	protected void onProgressUpdate(Integer... progress) {
 		super.onProgressUpdate();
+		if(!mProgressDialog.isShowing()){
+			mProgressDialog.show();
+		}
 		mProgressDialog.setProgress(progress[0]);
 
 	}
+	
+
 }

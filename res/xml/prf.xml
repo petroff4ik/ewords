@@ -19,7 +19,7 @@ android:defaultValue="false"
                 android:entries="@array/listOptions"
                 android:entryValues="@array/listValues"
                 android:key="SL"
-				android:defaultValue = "ru"
+				android:defaultValue = "RU"
                 android:title="Source language" 
 				android:summary="Choose language"/>
 	<Preference

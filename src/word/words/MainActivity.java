@@ -40,29 +40,30 @@ public class MainActivity extends Activity {
 	private int soundApp;
 	boolean loaded = false;
 
-
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.main);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
+				R.layout.window_title);
 		DBConnector db = new DBConnector(this);
 		wd = new WordsData(db, this);
 		if (wd.getPreferenceSound()) {
-			//init sound
+			// init sound
 			this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
 			soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
 			soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
 
 				@Override
-				public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+				public void onLoadComplete(SoundPool soundPool, int sampleId,
+						int status) {
 					loaded = true;
 				}
 			});
 
-			//Загружаем звуки в память
+			// Загружаем звуки в память
 			soundWin = soundPool.load(this, R.raw.soundwin, 1);
 			soundLose = soundPool.load(this, R.raw.soundlose, 1);
 			soundApp = soundPool.load(this, R.raw.soundapp, 1);
@@ -70,26 +71,29 @@ public class MainActivity extends Activity {
 
 		if (wd.getAvailableWord() == false) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(R.string.words_ended).setCancelable(false).setPositiveButton("Yes",
-					new DialogInterface.OnClickListener() {
+			builder.setMessage(R.string.words_ended)
+					.setCancelable(false)
+					.setPositiveButton("Yes",
+							new DialogInterface.OnClickListener() {
 
-						public void onClick(DialogInterface dialog,
-								int id) {
-							wd.resetWords();
-							wd.Restart();
-							adapter.notifyDataSetChanged();
-							setText(wd.getWordEncode(), wd.getWordSrc());
-							dialog.cancel();
-						}
-					}).setNegativeButton("No",
-					new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									wd.resetWords();
+									wd.Restart();
+									adapter.notifyDataSetChanged();
+									setText(wd.getWordEncode(), wd.getWordSrc());
+									dialog.cancel();
+								}
+							})
+					.setNegativeButton("No",
+							new DialogInterface.OnClickListener() {
 
-						public void onClick(DialogInterface dialog,
-								int id) {
-							finish();
+								public void onClick(DialogInterface dialog,
+										int id) {
+									finish();
 
-						}
-					});
+								}
+							});
 			AlertDialog alert = builder.create();
 			alert.show();
 		}
@@ -178,7 +182,9 @@ public class MainActivity extends Activity {
 				wd.nextWord();
 				isNewWorld();
 				setText(wd.getWordEncode(), wd.getWordSrc());
+				if (wd.getStaticFlag()) {
 				cleanStar();
+				}
 				adapter.notifyDataSetChanged();
 				return true;
 			}
@@ -200,7 +206,8 @@ public class MainActivity extends Activity {
 	public void initStar() {
 		LayoutInflater ltInflater = getLayoutInflater();
 		for (int i = 1; i <= wd.getTotalCountStar(); i++) {
-			ImageView star = (ImageView) ltInflater.inflate(R.layout.star, null, false);
+			ImageView star = (ImageView) ltInflater.inflate(R.layout.star,
+					null, false);
 
 			star.setTag("star" + i);
 			star.setVisibility(star.INVISIBLE);
@@ -212,9 +219,11 @@ public class MainActivity extends Activity {
 
 		for (int i = 1; i <= wd.getTotalCountStar(); i++) {
 			if (i <= wd.getCountStar()) {
-				llstar.findViewWithTag("star" + i).setVisibility(llstar.findViewWithTag("star" + i).VISIBLE);
+				llstar.findViewWithTag("star" + i).setVisibility(
+						llstar.findViewWithTag("star" + i).VISIBLE);
 			} else {
-				llstar.findViewWithTag("star" + i).setVisibility(llstar.findViewWithTag("star" + i).INVISIBLE);
+				llstar.findViewWithTag("star" + i).setVisibility(
+						llstar.findViewWithTag("star" + i).INVISIBLE);
 			}
 		}
 
@@ -222,15 +231,18 @@ public class MainActivity extends Activity {
 
 	public void cleanStar() {
 		for (int i = 1; i <= wd.getTotalCountStar(); i++) {
-			llstar.findViewWithTag("star" + i).setVisibility(llstar.findViewWithTag("star" + i).INVISIBLE);
+			llstar.findViewWithTag("star" + i).setVisibility(
+					llstar.findViewWithTag("star" + i).INVISIBLE);
 		}
 	}
 
 	public void play_sound(String type) {
 		if (wd.getPreferenceSound()) {
 			AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-			float actualVolume = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-			float maxVolume = (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+			float actualVolume = (float) audioManager
+					.getStreamVolume(AudioManager.STREAM_MUSIC);
+			float maxVolume = (float) audioManager
+					.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 			float volume = actualVolume / maxVolume;
 			// Is the sound loaded already?
 			if (type.equals("win")) {
@@ -245,5 +257,11 @@ public class MainActivity extends Activity {
 			long milliseconds = 100;
 			v.vibrate(milliseconds);
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		wd.dbClose();
 	}
 }
