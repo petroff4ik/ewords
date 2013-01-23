@@ -105,7 +105,7 @@ public class WordsData implements Serializable {
 		hashmap.put("ru", new String[] { "а", "б", "в", "г", "д", "е",
 				"з", "ж", "к", "л", "м", "н", "р", "п", "о", "е",
 				"с", "т", "я", "ч", "и", "ь", "ю", "й", "ц", "у",
-				"ш", "з", "х", "э", "ы", "ф" });
+				"ш", "щ", "з", "х", "э", "ы", "ф" });
 		countWords = db.getCountWords(langSrc);
 		Reload();
 	}
