@@ -1,4 +1,4 @@
-﻿/*
+/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -99,13 +99,13 @@ public class WordsData implements Serializable {
 	}
 
 	public void Restart() {
-		hashmap.put("en", new String[] { "a", "b", "c", "d", "e", "f", "g",
-				"h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
-				"t", "u", "v", "w", "x", "y", "z" });
-		hashmap.put("ru", new String[] { "а", "б", "в", "г", "д", "е",
-				"з", "ж", "к", "л", "м", "н", "р", "п", "о", "е",
-				"с", "т", "я", "ч", "и", "ь", "ю", "й", "ц", "у",
-				"ш", "щ", "з", "х", "э", "ы", "ф" });
+		hashmap.put("en", new String[]{"a", "b", "c", "d", "e", "f", "g",
+					"h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
+					"t", "u", "v", "w", "x", "y", "z"});
+		hashmap.put("ru", new String[]{"а", "б", "в", "г", "д", "е",
+					"з", "ж", "к", "л", "м", "н", "р", "п", "о", "е",
+					"с", "т", "я", "ч", "и", "ь", "ю", "й", "ц", "у",
+					"ш", "щ", "з", "х", "э", "ы", "ф"});
 		countWords = db.getCountWords(langSrc);
 		Reload();
 	}
@@ -154,6 +154,9 @@ public class WordsData implements Serializable {
 
 	public boolean checkChar(int position) {
 		String c = getData(position);
+		if (c.isEmpty()) {
+			return false;
+		}
 		chooseChars.add(c);
 		wrongChar = "";
 		int size = chooseChars.size();
@@ -240,7 +243,9 @@ public class WordsData implements Serializable {
 	}
 
 	protected void removeChars(String c) {
-		chooseChars.remove(chooseChars.lastIndexOf(c));
+		if (chooseChars.size() > 0) {
+			chooseChars.remove(chooseChars.lastIndexOf(c));
+		}
 	}
 
 	public String GetChar(int position) {
