@@ -23,6 +23,7 @@ import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Vibrator;
 import android.content.Context;
+import android.app.AlertDialog.Builder;
 
 public class MainActivity extends Activity {
 
@@ -34,6 +35,7 @@ public class MainActivity extends Activity {
 	TextView ws;
 	MyToast myToast;
 	LinearLayout llstar;
+	AlertDialog.Builder adb;
 	private SoundPool soundPool;
 	private int soundWin;
 	private int soundLose;
@@ -71,29 +73,26 @@ public class MainActivity extends Activity {
 
 		if (wd.getAvailableWord() == false) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage(R.string.words_ended)
-					.setCancelable(false)
-					.setPositiveButton("Yes",
-							new DialogInterface.OnClickListener() {
+			builder.setMessage(R.string.words_ended).setCancelable(false).setPositiveButton("Yes",
+					new DialogInterface.OnClickListener() {
 
-								public void onClick(DialogInterface dialog,
-										int id) {
-									wd.resetWords();
-									wd.Restart();
-									adapter.notifyDataSetChanged();
-									setText(wd.getWordEncode(), wd.getWordSrc());
-									dialog.cancel();
-								}
-							})
-					.setNegativeButton("No",
-							new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog,
+								int id) {
+							wd.resetWords();
+							wd.Restart();
+							adapter.notifyDataSetChanged();
+							setText(wd.getWordEncode(), wd.getWordSrc());
+							dialog.cancel();
+						}
+					}).setNegativeButton("No",
+					new DialogInterface.OnClickListener() {
 
-								public void onClick(DialogInterface dialog,
-										int id) {
-									finish();
+						public void onClick(DialogInterface dialog,
+								int id) {
+							finish();
 
-								}
-							});
+						}
+					});
 			AlertDialog alert = builder.create();
 			alert.show();
 		}
@@ -183,14 +182,35 @@ public class MainActivity extends Activity {
 				isNewWorld();
 				setText(wd.getWordEncode(), wd.getWordSrc());
 				if (wd.getStaticFlag()) {
-				cleanStar();
+					cleanStar();
 				}
 				adapter.notifyDataSetChanged();
 				return true;
 			}
 		});
 
+		adb = new AlertDialog.Builder(this);
+		adb.setTitle("Search word");
+		// создаем view из dialog.xml
+		LinearLayout view = (LinearLayout) getLayoutInflater().inflate(R.layout.search, null);
+		// устанавливаем ее, как содержимое тела диалога
+		adb.setView(view);
+		MenuItem menuItem2 = menu.add("Search");
+		menuItem2.setIcon(R.drawable.lens);
+		menuItem2.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+			public boolean onMenuItemClick(MenuItem _menuItem) {
+				adb.show();
+				return true;
+			}
+		});
+
+
 		return super.onCreateOptionsMenu(menu);
+	}
+	
+	public void onSearchOk(View view) {
+		
 	}
 
 	public void isNewWorld() {
@@ -239,10 +259,8 @@ public class MainActivity extends Activity {
 	public void play_sound(String type) {
 		if (wd.getPreferenceSound()) {
 			AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
-			float actualVolume = (float) audioManager
-					.getStreamVolume(AudioManager.STREAM_MUSIC);
-			float maxVolume = (float) audioManager
-					.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+			float actualVolume = (float) audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+			float maxVolume = (float) audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 			float volume = actualVolume / maxVolume;
 			// Is the sound loaded already?
 			if (type.equals("win")) {

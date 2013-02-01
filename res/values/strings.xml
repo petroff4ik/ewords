@@ -9,5 +9,5 @@
     <string name="qm">Are you sure you want to exit?</string>
 	<string name="ended_words">All words ended. Congratulation!</string>
 	<string name="you_score">Your scores: </string>
-	
+	<string name="search_ok">Search</string>
 </resources>
