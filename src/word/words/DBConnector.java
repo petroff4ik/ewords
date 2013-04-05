@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.io.Serializable;
 
-
 public class DBConnector implements Serializable {
 
 	private static final String TAG = "DB";
@@ -71,24 +70,21 @@ public class DBConnector implements Serializable {
 
 	public String getWord(int id) {// TODO make check return value
 		Cursor mCursor = mDataBase.query(TABLE_NAME, null, COLUMN_ID + " = ?",
-				new String[] { String.valueOf(id) }, null, null, COLUMN_ID);
+				new String[]{String.valueOf(id)}, null, null, COLUMN_ID);
 		mCursor.moveToFirst();
-		String word = mCursor.getString(mCursor
-				.getColumnIndexOrThrow(COLUMN_WORD));
+		String word = mCursor.getString(mCursor.getColumnIndexOrThrow(COLUMN_WORD));
 		mCursor.close();
 		return word;
 	}
 
 	public Map getWordStatusNo(String lang) {// TODO make check return value
 		String sql = "select wsrc.word as wordSrc, wsrc._id as wordSrcId, words.* from words as wsrc, words, links where (wsrc._id = links.w1id and words._id = links.w2id) and wsrc.status = ? and wsrc.type = ?  ORDER BY RANDOM() LIMIT 1";
-		Cursor mCursor = mDataBase.rawQuery(sql, new String[] { "no", lang });
+		Cursor mCursor = mDataBase.rawQuery(sql, new String[]{"no", lang});
 		Map<String, String> hashmap = new HashMap<String, String>();
 		if (mCursor.getCount() > 0) {
 			mCursor.moveToFirst();
-			String wordSrc = mCursor.getString(mCursor
-					.getColumnIndexOrThrow("wordSrc"));
-			String word = mCursor.getString(mCursor
-					.getColumnIndexOrThrow("word"));
+			String wordSrc = mCursor.getString(mCursor.getColumnIndexOrThrow("wordSrc"));
+			String word = mCursor.getString(mCursor.getColumnIndexOrThrow("word"));
 			hashmap.put("wordSrc", wordSrc);
 			hashmap.put("word", word);
 		}
@@ -131,7 +127,7 @@ public class DBConnector implements Serializable {
 	public void resetWords(String langSrc) {
 		ContentValues s = new ContentValues();
 		s.put(COLUMN_STATUS, "no");
-		mDataBase.update(TABLE_NAME, s, " type = ? ", new String[] { langSrc });
+		mDataBase.update(TABLE_NAME, s, " type = ? ", new String[]{langSrc});
 	}
 
 	public Map getWordCheck(String lang, String wordSrcSearch, String like) {// TODO
@@ -141,15 +137,13 @@ public class DBConnector implements Serializable {
 		// value
 		String sql = "select wsrc.word as wordSrc, wsrc._id as wordSrcId, words.* from words as wsrc, words, links where (wsrc._id = links.w1id and words._id = links.w2id) and wsrc.status = ? and wsrc.type = ?"
 				+ " AND  wsrc.word = ? AND " + like;
-		Cursor mCursor = mDataBase.rawQuery(sql, new String[] { "no", lang,
-				wordSrcSearch });
+		Cursor mCursor = mDataBase.rawQuery(sql, new String[]{"no", lang,
+					wordSrcSearch});
 		Map<String, String> hashmap = new HashMap<String, String>();
 		if (mCursor.getCount() > 0) {
 			mCursor.moveToFirst();
-			String wordSrc = mCursor.getString(mCursor
-					.getColumnIndexOrThrow("wordSrc"));
-			String word = mCursor.getString(mCursor
-					.getColumnIndexOrThrow("word"));
+			String wordSrc = mCursor.getString(mCursor.getColumnIndexOrThrow("wordSrc"));
+			String word = mCursor.getString(mCursor.getColumnIndexOrThrow("word"));
 			hashmap.put("wordSrc", wordSrc);
 			hashmap.put("word", word);
 		}
@@ -161,12 +155,22 @@ public class DBConnector implements Serializable {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_STATUS, "yes");
 		return mDataBase.update(TABLE_NAME, cv, COLUMN_WORD + " = ?",
-				new String[] { str });
+				new String[]{str});
 	}
 
 	public void db_close() {
 		if (mDataBase != null) {
 			mDataBase.close();
 		}
+	}
+
+	public Cursor searchByWordLang(String str, String lang) {
+		String sql = "select wsrc.* from words as wsrc  where  wsrc.status = ? and wsrc.type = ? and wsrc.word like '%?%'   LIMIT 10";
+		Cursor mCursor = mDataBase.rawQuery(sql, new String[]{"no", lang, str});
+Log.v("DBtest","cursor");
+		if (mCursor.getCount() > 0) {
+			mCursor.moveToFirst();
+		}
+		return mCursor;
 	}
 }

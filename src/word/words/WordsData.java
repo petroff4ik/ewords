@@ -47,6 +47,10 @@ public class WordsData implements Serializable {
 	public boolean getPreferenceSound() {
 		return this.preferenceSound;
 	}
+	
+	public String getLangSrc(){
+		return this.langSrc;
+	}
 
 	public String getWordPrev() {
 		return this.wordPrev;

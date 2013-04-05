@@ -24,6 +24,7 @@ import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Vibrator;
 import android.content.Context;
 import android.app.AlertDialog.Builder;
+import android.widget.AutoCompleteTextView;
 
 public class MainActivity extends Activity {
 
@@ -36,6 +37,7 @@ public class MainActivity extends Activity {
 	MyToast myToast;
 	LinearLayout llstar;
 	AlertDialog.Builder adb;
+	DBConnector db;
 	private SoundPool soundPool;
 	private int soundWin;
 	private int soundLose;
@@ -50,7 +52,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.main);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
 				R.layout.window_title);
-		DBConnector db = new DBConnector(this);
+		db = new DBConnector(this);
 		wd = new WordsData(db, this);
 		if (wd.getPreferenceSound()) {
 			// init sound
@@ -195,6 +197,10 @@ public class MainActivity extends Activity {
 		LinearLayout view = (LinearLayout) getLayoutInflater().inflate(R.layout.search, null);
 		// устанавливаем ее, как содержимое тела диалога
 		adb.setView(view);
+		AutoCompleteTextView itemDescriptionView = (AutoCompleteTextView) view.findViewById(R.id.autocomplete);
+		ItemAutoTextAdapter adapterSearch = new ItemAutoTextAdapter(this,db,wd.getLangSrc());
+		itemDescriptionView.setAdapter(adapterSearch);
+		//itemDescriptionView.setOnItemClickListener(adapter);
 		MenuItem menuItem2 = menu.add("Search");
 		menuItem2.setIcon(R.drawable.lens);
 		menuItem2.setOnMenuItemClickListener(new OnMenuItemClickListener() {
@@ -208,9 +214,8 @@ public class MainActivity extends Activity {
 
 		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	public void onSearchOk(View view) {
-		
 	}
 
 	public void isNewWorld() {
