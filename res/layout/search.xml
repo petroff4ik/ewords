@@ -10,15 +10,8 @@
       android:layout_height="wrap_content"
       android:layout_width="fill_parent"
       android:layout_margin="3dp"
-      android:hint="enter your words here"
+      android:hint="search words here"
       android:completionThreshold="1"
+	  android:imeOptions="actionDone"
       android:singleLine="true"/>
-	
-	<Button
-     android:layout_height="wrap_content"
-     android:layout_width="wrap_content"
-     android:text="@string/search_ok"
-     android:textSize="30dp"
-     android:onClick="onSearchOk" />
-
 </LinearLayout>

@@ -47,8 +47,8 @@ public class WordsData implements Serializable {
 	public boolean getPreferenceSound() {
 		return this.preferenceSound;
 	}
-	
-	public String getLangSrc(){
+
+	public String getLangSrc() {
 		return this.langSrc;
 	}
 
@@ -113,6 +113,18 @@ public class WordsData implements Serializable {
 		countWords = db.getCountWords(langSrc);
 		Reload();
 	}
+	
+	public void Restart(String word) {
+		hashmap.put("en", new String[]{"a", "b", "c", "d", "e", "f", "g",
+					"h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",
+					"t", "u", "v", "w", "x", "y", "z"});
+		hashmap.put("ru", new String[]{"а", "б", "в", "г", "д", "е",
+					"з", "ж", "к", "л", "м", "н", "р", "п", "о", "е",
+					"с", "т", "я", "ч", "и", "ь", "ю", "й", "ц", "у",
+					"ш", "щ", "з", "х", "э", "ы", "ф"});
+		countWords = db.getCountWords(langSrc);
+		Reload(word);
+	}
 
 	public String[] getData() {
 		return hashmap.get(alph);
@@ -130,6 +142,26 @@ public class WordsData implements Serializable {
 
 	public void Reload() {
 		Map word = db.getWordStatusNo(langSrc);
+		chooseChars.removeAll(chooseChars);
+		wordSrc = "";
+		wordEncode = "";
+		wordTarget = "";
+		countStar = 0;
+		if (word.size() > 0) {
+			wordSrc = word.get("wordSrc").toString();
+			wordTarget = word.get("word").toString();
+			for (int i = 1; i <= wordTarget.length(); i++) {
+				wordEncode = wordEncode.concat("*");
+			}
+			availableWord = true;
+
+		} else {
+			availableWord = false;
+		}
+	}
+	
+	public void Reload(String targetWord) {
+		Map word = db.getWordStatusNo(langSrc,targetWord);
 		chooseChars.removeAll(chooseChars);
 		wordSrc = "";
 		wordEncode = "";
@@ -270,6 +302,12 @@ public class WordsData implements Serializable {
 		db.update(wordSrc);
 		Restart();
 	}
+	
+	public void nextWord(String word) {
+		wordPrev = wordTarget;
+		db.update(wordSrc);
+		Restart(word);
+	}
 
 	protected void initSrcLang() {
 		String srcLang = sp.getString("SL", "RU");
@@ -285,4 +323,6 @@ public class WordsData implements Serializable {
 	public void dbClose() {
 		db.db_close();
 	}
+
+	
 }

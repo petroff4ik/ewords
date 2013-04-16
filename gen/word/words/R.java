@@ -67,6 +67,7 @@ public final class R {
         public static final int search_ok=0x7f080009;
         public static final int setting=0x7f080003;
         public static final int start=0x7f080002;
+        public static final int sw=0x7f08000a;
         public static final int words_ended=0x7f080005;
         public static final int you_score=0x7f080008;
     }

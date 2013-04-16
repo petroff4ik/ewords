@@ -10,4 +10,5 @@
 	<string name="ended_words">All words ended. Congratulation!</string>
 	<string name="you_score">Your scores: </string>
 	<string name="search_ok">Search</string>
+	<string name="sw">Search word</string>
 </resources>

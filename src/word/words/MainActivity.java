@@ -25,6 +25,10 @@ import android.os.Vibrator;
 import android.content.Context;
 import android.app.AlertDialog.Builder;
 import android.widget.AutoCompleteTextView;
+import android.widget.TextView.OnEditorActionListener;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 
 public class MainActivity extends Activity {
 
@@ -36,7 +40,7 @@ public class MainActivity extends Activity {
 	TextView ws;
 	MyToast myToast;
 	LinearLayout llstar;
-	AlertDialog.Builder adb;
+	AlertDialog dlg;
 	DBConnector db;
 	private SoundPool soundPool;
 	private int soundWin;
@@ -191,31 +195,41 @@ public class MainActivity extends Activity {
 			}
 		});
 
-		adb = new AlertDialog.Builder(this);
-		adb.setTitle("Search word");
-		// создаем view из dialog.xml
-		LinearLayout view = (LinearLayout) getLayoutInflater().inflate(R.layout.search, null);
-		// устанавливаем ее, как содержимое тела диалога
-		adb.setView(view);
-		AutoCompleteTextView itemDescriptionView = (AutoCompleteTextView) view.findViewById(R.id.autocomplete);
-		ItemAutoTextAdapter adapterSearch = new ItemAutoTextAdapter(this,db,wd.getLangSrc());
-		itemDescriptionView.setAdapter(adapterSearch);
-		//itemDescriptionView.setOnItemClickListener(adapter);
+
 		MenuItem menuItem2 = menu.add("Search");
 		menuItem2.setIcon(R.drawable.lens);
 		menuItem2.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
 			public boolean onMenuItemClick(MenuItem _menuItem) {
-				adb.show();
+				AlertDialog.Builder adb = new AlertDialog.Builder(MainActivity.this);
+				adb.setTitle(R.string.sw);
+
+				LinearLayout view = (LinearLayout) getLayoutInflater().inflate(R.layout.search, null);
+				adb.setView(view);
+				AutoCompleteTextView itemDescriptionView = (AutoCompleteTextView) view.findViewById(R.id.autocomplete);
+				itemDescriptionView.setOnEditorActionListener(new OnEditorActionListener() {
+
+					@Override
+					public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+						if (actionId == EditorInfo.IME_ACTION_DONE) {
+							InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+							imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+							return true;
+						}
+						return false;
+					}
+				});
+				ItemAutoTextAdapter adapterSearch = new ItemAutoTextAdapter(MainActivity.this, db, wd.getLangSrc());
+				itemDescriptionView.setAdapter(adapterSearch);
+				itemDescriptionView.setOnItemClickListener(adapterSearch);
+				dlg = adb.create();
+				dlg.show();
 				return true;
 			}
 		});
 
 
 		return super.onCreateOptionsMenu(menu);
-	}
-
-	public void onSearchOk(View view) {
 	}
 
 	public void isNewWorld() {

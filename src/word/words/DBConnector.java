@@ -91,6 +91,22 @@ public class DBConnector implements Serializable {
 		mCursor.close();
 		return hashmap;
 	}
+	
+	public Map getWordStatusNo(String lang, String targetWord) {// TODO make check return value
+		String sql = "select wsrc.word as wordSrc, wsrc._id as wordSrcId, words.* from words as wsrc, words, links where (wsrc._id = links.w1id and words._id = links.w2id) "
+				+ "and wsrc.status = ? and wsrc.type = ? and wsrc.word = ? LIMIT 1";
+		Cursor mCursor = mDataBase.rawQuery(sql, new String[]{"no", lang, targetWord});
+		Map<String, String> hashmap = new HashMap<String, String>();
+		if (mCursor.getCount() > 0) {
+			mCursor.moveToFirst();
+			String wordSrc = mCursor.getString(mCursor.getColumnIndexOrThrow("wordSrc"));
+			String word = mCursor.getString(mCursor.getColumnIndexOrThrow("word"));
+			hashmap.put("wordSrc", wordSrc);
+			hashmap.put("word", word);
+		}
+		mCursor.close();
+		return hashmap;
+	}
 
 	public Cursor rawQuery(String sql, String[] selectionArgs) {
 		Cursor res = mDataBase.rawQuery(sql, selectionArgs);
@@ -165,9 +181,8 @@ public class DBConnector implements Serializable {
 	}
 
 	public Cursor searchByWordLang(String str, String lang) {
-		String sql = "select wsrc.* from words as wsrc  where  wsrc.status = ? and wsrc.type = ? and wsrc.word like '%?%'   LIMIT 10";
-		Cursor mCursor = mDataBase.rawQuery(sql, new String[]{"no", lang, str});
-Log.v("DBtest","cursor");
+		String sql = "select wsrc.* from words as wsrc  where  wsrc.status = ? and wsrc.type = ? and wsrc.word like ?   LIMIT 10";
+		Cursor mCursor = mDataBase.rawQuery(sql, new String[]{"no", lang, "%" + str + "%"});
 		if (mCursor.getCount() > 0) {
 			mCursor.moveToFirst();
 		}
