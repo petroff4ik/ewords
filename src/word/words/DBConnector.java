@@ -18,7 +18,7 @@ public class DBConnector implements Serializable {
 
 	private static final String TAG = "DB";
 	private static final String DATABASE_NAME = "ewords.db";
-	private static final int DATABASE_VERSION = 43;
+	private static final int DATABASE_VERSION = 44;
 	private static final String TABLE_NAME = "words";
 	private static final String TABLE_NAME2 = "links";
 	private static final String COLUMN_ID = "_id";
