@@ -14,7 +14,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import 	android.view.Window;
+import android.view.Window;
 
 /**
  *
@@ -31,6 +31,12 @@ public class MainScreen extends Activity {
 		setContentView(R.layout.mainscreen);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
 		DBConnector db = new DBConnector(this);
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+		boolean first_launch = sp.getBoolean("FL", false);
+		if (!first_launch) {
+			MyTask mt = new MyTask(this, db.mDataBase);
+			mt.execute();
+		}
 		show_score();
 	}
 

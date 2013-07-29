@@ -12,9 +12,11 @@ import android.database.sqlite.SQLiteDatabase;
 import org.xmlpull.v1.XmlPullParser;
 import android.widget.Toast;
 import android.content.ContentValues;
-import android.util.Log;
 import android.content.pm.ActivityInfo;
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
 
 /**
  *
@@ -42,7 +44,7 @@ class MyTask extends AsyncTask<Void, Integer, Void> {
 				mProgressDialog = new ProgressDialog(
 						context);
 				mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL); // устанавливаем стиль
-				mProgressDialog.setMessage("Load. Wait...");  // задаем текст
+				mProgressDialog.setMessage("First launch. Wait...");  // задаем текст
 				mProgressDialog.setCancelable(false);
 				return mProgressDialog;
 
@@ -50,7 +52,7 @@ class MyTask extends AsyncTask<Void, Integer, Void> {
 				mProgressDialog = new ProgressDialog(
 						context);
 				mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-				mProgressDialog.setMessage("Load. Wait...");
+				mProgressDialog.setMessage("First launch. Wait...");
 				mProgressDialog.setCancelable(false);
 				return mProgressDialog;
 
@@ -77,6 +79,7 @@ class MyTask extends AsyncTask<Void, Integer, Void> {
 			ContentValues word = new ContentValues();
 			ContentValues link = new ContentValues();
 			Integer i = 0;
+			db.beginTransaction();
 			while (parser.getEventType() != XmlPullParser.END_DOCUMENT) {
 				if (parser.getEventType() == XmlPullParser.START_TAG
 						&& parser.getName().equals("word")) {
@@ -88,7 +91,7 @@ class MyTask extends AsyncTask<Void, Integer, Void> {
 						&& parser.getName().equals("link")) {
 					link.put("w1id", parser.getAttributeValue(0));
 					link.put("w2id", parser.getAttributeValue(1));
-					db.insert("links", null, link);
+					//db.insert("links", null, link);
 					link.put("w1id", parser.getAttributeValue(1));
 					link.put("w2id", parser.getAttributeValue(0));
 					db.insert("links", null, link);
@@ -99,6 +102,9 @@ class MyTask extends AsyncTask<Void, Integer, Void> {
 
 				parser.next();
 			}
+			db.setTransactionSuccessful();
+			db.endTransaction();
+
 		} catch (Throwable t) {
 			Toast.makeText(context,
 					"Errors upload words: " + t.toString(), 4000).show();
@@ -117,17 +123,19 @@ class MyTask extends AsyncTask<Void, Integer, Void> {
 		mProgressDialog.cancel();
 		Activity activity = (Activity) context;
 		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+		Editor ed = sp.edit();
+		ed.putBoolean("FL", true);
+		ed.commit();
 	}
 
 	@Override
 	protected void onProgressUpdate(Integer... progress) {
 		super.onProgressUpdate();
-		if(!mProgressDialog.isShowing()){
+		if (!mProgressDialog.isShowing()) {
 			mProgressDialog.show();
 		}
 		mProgressDialog.setProgress(progress[0]);
 
 	}
-	
-
 }

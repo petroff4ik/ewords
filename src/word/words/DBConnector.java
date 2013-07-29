@@ -18,7 +18,7 @@ public class DBConnector implements Serializable {
 
 	private static final String TAG = "DB";
 	private static final String DATABASE_NAME = "ewords.db";
-	private static final int DATABASE_VERSION = 38;
+	private static final int DATABASE_VERSION = 43;
 	private static final String TABLE_NAME = "words";
 	private static final String TABLE_NAME2 = "links";
 	private static final String COLUMN_ID = "_id";
@@ -27,7 +27,7 @@ public class DBConnector implements Serializable {
 	private static final String COLUMN_STATUS = "status";
 	private static final String COLUMN_PID = "w1id";
 	private static final String COLUMN_TID = "w2id";
-	private static SQLiteDatabase mDataBase;
+	public static SQLiteDatabase mDataBase;
 
 	public DBConnector(Context context) {
 		OpenHelper mOpenHelper = new OpenHelper(context);
@@ -55,8 +55,6 @@ public class DBConnector implements Serializable {
 			query = "CREATE TABLE " + TABLE_NAME2 + " (" + COLUMN_PID
 					+ " INTEGER, " + COLUMN_TID + " INTEGER " + "); ";
 			db.execSQL(query);
-			MyTask mt = new MyTask(context, db);
-			mt.execute();
 		}
 
 		@Override
@@ -187,5 +185,17 @@ public class DBConnector implements Serializable {
 			mCursor.moveToFirst();
 		}
 		return mCursor;
+	}
+	
+	public void start_transaction(){
+		mDataBase.beginTransaction();
+	}
+	
+	public void end_transaction(){
+		mDataBase.endTransaction();
+	}
+	
+	public void sc_transaction(){
+		mDataBase.setTransactionSuccessful();
 	}
 }
