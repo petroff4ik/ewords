@@ -6,36 +6,51 @@ package word.words;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.content.Intent;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.preference.PreferenceManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.Window;
 
 /**
- *
+ * 
  * @author petroff
  */
 public class MainScreen extends Activity {
 
 	private static final String TAG = "MainScreen";
+	DBConnector db;
 
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setContentView(R.layout.mainscreen);
-		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
-		DBConnector db = new DBConnector(this);
-		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE,
+				R.layout.window_title);
+		db = (DBConnector) getLastNonConfigurationInstance();
+		if (db == null) {
+			db = new DBConnector(this);
+			db.mt = new MyTask(this, db.mDataBase);
+		}
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(this);
 		boolean first_launch = sp.getBoolean("FL", false);
 		if (!first_launch) {
-			MyTask mt = new MyTask(this, db.mDataBase);
-			mt.execute();
+			String statusT = db.mt.getStatus().toString();
+			if (statusT.equals("RUNNING")) {
+				CProgressBar.finish();
+				CProgressBar.onCreateDialog(0, this);
+				CProgressBar.setProgress();
+			} else {
+				db.mt.execute();
+			}
 		}
 		show_score();
 	}
@@ -45,9 +60,15 @@ public class MainScreen extends Activity {
 		show_score();
 	}
 
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+		return db;
+	}
+
 	public void show_score() {
-		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-		boolean st = sp.getBoolean("ST", false);
+		SharedPreferences sp = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		boolean st = sp.getBoolean("ST", true);
 		LinearLayout ll = (LinearLayout) findViewById(R.id.you_score_l);
 		if (st) {
 			TextView tv = (TextView) findViewById(R.id.you_score_d);
@@ -67,17 +88,21 @@ public class MainScreen extends Activity {
 	public void onBQuit(View view) {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(R.string.qm).setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+		builder.setMessage(R.string.qm)
+				.setCancelable(false)
+				.setPositiveButton("Yes",
+						new DialogInterface.OnClickListener() {
 
-			public void onClick(DialogInterface dialog, int id) {
-				finish();
-			}
-		}).setNegativeButton("No", new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								finish();
+							}
+						})
+				.setNegativeButton("No", new DialogInterface.OnClickListener() {
 
-			public void onClick(DialogInterface dialog, int id) {
-				dialog.cancel();
-			}
-		});
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				});
 		AlertDialog alert = builder.create();
 		alert.show();
 	}

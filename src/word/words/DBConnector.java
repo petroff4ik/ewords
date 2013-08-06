@@ -28,6 +28,7 @@ public class DBConnector implements Serializable {
 	private static final String COLUMN_PID = "w1id";
 	private static final String COLUMN_TID = "w2id";
 	public static SQLiteDatabase mDataBase;
+	MyTask mt;
 
 	public DBConnector(Context context) {
 		OpenHelper mOpenHelper = new OpenHelper(context);
@@ -68,37 +69,45 @@ public class DBConnector implements Serializable {
 
 	public String getWord(int id) {// TODO make check return value
 		Cursor mCursor = mDataBase.query(TABLE_NAME, null, COLUMN_ID + " = ?",
-				new String[]{String.valueOf(id)}, null, null, COLUMN_ID);
+				new String[] { String.valueOf(id) }, null, null, COLUMN_ID);
 		mCursor.moveToFirst();
-		String word = mCursor.getString(mCursor.getColumnIndexOrThrow(COLUMN_WORD));
+		String word = mCursor.getString(mCursor
+				.getColumnIndexOrThrow(COLUMN_WORD));
 		mCursor.close();
 		return word;
 	}
 
 	public Map getWordStatusNo(String lang) {// TODO make check return value
 		String sql = "select wsrc.word as wordSrc, wsrc._id as wordSrcId, words.* from words as wsrc, words, links where (wsrc._id = links.w1id and words._id = links.w2id) and wsrc.status = ? and wsrc.type = ?  ORDER BY RANDOM() LIMIT 1";
-		Cursor mCursor = mDataBase.rawQuery(sql, new String[]{"no", lang});
+		Cursor mCursor = mDataBase.rawQuery(sql, new String[] { "no", lang });
 		Map<String, String> hashmap = new HashMap<String, String>();
 		if (mCursor.getCount() > 0) {
 			mCursor.moveToFirst();
-			String wordSrc = mCursor.getString(mCursor.getColumnIndexOrThrow("wordSrc"));
-			String word = mCursor.getString(mCursor.getColumnIndexOrThrow("word"));
+			String wordSrc = mCursor.getString(mCursor
+					.getColumnIndexOrThrow("wordSrc"));
+			String word = mCursor.getString(mCursor
+					.getColumnIndexOrThrow("word"));
 			hashmap.put("wordSrc", wordSrc);
 			hashmap.put("word", word);
 		}
 		mCursor.close();
 		return hashmap;
 	}
-	
-	public Map getWordStatusNo(String lang, String targetWord) {// TODO make check return value
+
+	public Map getWordStatusNo(String lang, String targetWord) {// TODO make
+																// check return
+																// value
 		String sql = "select wsrc.word as wordSrc, wsrc._id as wordSrcId, words.* from words as wsrc, words, links where (wsrc._id = links.w1id and words._id = links.w2id) "
 				+ "and wsrc.status = ? and wsrc.type = ? and wsrc.word = ? LIMIT 1";
-		Cursor mCursor = mDataBase.rawQuery(sql, new String[]{"no", lang, targetWord});
+		Cursor mCursor = mDataBase.rawQuery(sql, new String[] { "no", lang,
+				targetWord });
 		Map<String, String> hashmap = new HashMap<String, String>();
 		if (mCursor.getCount() > 0) {
 			mCursor.moveToFirst();
-			String wordSrc = mCursor.getString(mCursor.getColumnIndexOrThrow("wordSrc"));
-			String word = mCursor.getString(mCursor.getColumnIndexOrThrow("word"));
+			String wordSrc = mCursor.getString(mCursor
+					.getColumnIndexOrThrow("wordSrc"));
+			String word = mCursor.getString(mCursor
+					.getColumnIndexOrThrow("word"));
 			hashmap.put("wordSrc", wordSrc);
 			hashmap.put("word", word);
 		}
@@ -141,7 +150,7 @@ public class DBConnector implements Serializable {
 	public void resetWords(String langSrc) {
 		ContentValues s = new ContentValues();
 		s.put(COLUMN_STATUS, "no");
-		mDataBase.update(TABLE_NAME, s, " type = ? ", new String[]{langSrc});
+		mDataBase.update(TABLE_NAME, s, " type = ? ", new String[] { langSrc });
 	}
 
 	public Map getWordCheck(String lang, String wordSrcSearch, String like) {// TODO
@@ -151,13 +160,15 @@ public class DBConnector implements Serializable {
 		// value
 		String sql = "select wsrc.word as wordSrc, wsrc._id as wordSrcId, words.* from words as wsrc, words, links where (wsrc._id = links.w1id and words._id = links.w2id) and wsrc.status = ? and wsrc.type = ?"
 				+ " AND  wsrc.word = ? AND " + like;
-		Cursor mCursor = mDataBase.rawQuery(sql, new String[]{"no", lang,
-					wordSrcSearch});
+		Cursor mCursor = mDataBase.rawQuery(sql, new String[] { "no", lang,
+				wordSrcSearch });
 		Map<String, String> hashmap = new HashMap<String, String>();
 		if (mCursor.getCount() > 0) {
 			mCursor.moveToFirst();
-			String wordSrc = mCursor.getString(mCursor.getColumnIndexOrThrow("wordSrc"));
-			String word = mCursor.getString(mCursor.getColumnIndexOrThrow("word"));
+			String wordSrc = mCursor.getString(mCursor
+					.getColumnIndexOrThrow("wordSrc"));
+			String word = mCursor.getString(mCursor
+					.getColumnIndexOrThrow("word"));
 			hashmap.put("wordSrc", wordSrc);
 			hashmap.put("word", word);
 		}
@@ -169,7 +180,7 @@ public class DBConnector implements Serializable {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_STATUS, "yes");
 		return mDataBase.update(TABLE_NAME, cv, COLUMN_WORD + " = ?",
-				new String[]{str});
+				new String[] { str });
 	}
 
 	public void db_close() {
@@ -180,22 +191,23 @@ public class DBConnector implements Serializable {
 
 	public Cursor searchByWordLang(String str, String lang) {
 		String sql = "select wsrc.* from words as wsrc  where  wsrc.status = ? and wsrc.type = ? and wsrc.word like ?   LIMIT 10";
-		Cursor mCursor = mDataBase.rawQuery(sql, new String[]{"no", lang, "%" + str + "%"});
+		Cursor mCursor = mDataBase.rawQuery(sql, new String[] { "no", lang,
+				"%" + str + "%" });
 		if (mCursor.getCount() > 0) {
 			mCursor.moveToFirst();
 		}
 		return mCursor;
 	}
-	
-	public void start_transaction(){
+
+	public void start_transaction() {
 		mDataBase.beginTransaction();
 	}
-	
-	public void end_transaction(){
+
+	public void end_transaction() {
 		mDataBase.endTransaction();
 	}
-	
-	public void sc_transaction(){
+
+	public void sc_transaction() {
 		mDataBase.setTransactionSuccessful();
 	}
 }

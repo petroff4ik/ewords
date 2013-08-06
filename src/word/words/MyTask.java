@@ -10,6 +10,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import org.xmlpull.v1.XmlPullParser;
+
+import android.util.Log;
 import android.widget.Toast;
 import android.content.ContentValues;
 import android.content.pm.ActivityInfo;
@@ -26,11 +28,6 @@ class MyTask extends AsyncTask<Void, Integer, Void> {
 
 	private static SQLiteDatabase db;
 	Context context;
-	ProgressDialog mProgressDialog;
-	static final int IDD__HORIZONTAL_PROGRESS = 0;
-	static final int IDD_WHEEL_PROGRESS = 1;
-	private static final String TAG = "MyTask";
-	private int dMax = 10000;
 
 	MyTask(Context context, SQLiteDatabase db) {
 		super();
@@ -38,38 +35,13 @@ class MyTask extends AsyncTask<Void, Integer, Void> {
 		this.db = db;
 	}
 
-	protected Dialog onCreateDialog(int id) {
-		switch (id) {
-			case IDD__HORIZONTAL_PROGRESS:
-				mProgressDialog = new ProgressDialog(
-						context);
-				mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL); // устанавливаем стиль
-				mProgressDialog.setMessage("First launch. Wait...");  // задаем текст
-				mProgressDialog.setCancelable(false);
-				return mProgressDialog;
 
-			case IDD_WHEEL_PROGRESS:
-				mProgressDialog = new ProgressDialog(
-						context);
-				mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-				mProgressDialog.setMessage("First launch. Wait...");
-				mProgressDialog.setCancelable(false);
-				return mProgressDialog;
-
-			default:
-				return null;
-		}
-	}
 
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		Activity activity = (Activity) context;
-		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
-		onCreateDialog(0);
-		mProgressDialog.setMax(dMax);
-		mProgressDialog.show();
-		mProgressDialog.setProgress(0);
+		CProgressBar.onCreateDialog(0, context);
+		CProgressBar.setProgress();
 	}
 
 	protected Void doInBackground(Void... params) {
@@ -109,20 +81,13 @@ class MyTask extends AsyncTask<Void, Integer, Void> {
 			Toast.makeText(context,
 					"Errors upload words: " + t.toString(), 4000).show();
 		}
-
-
-
-
 		return null;
 	}
 
 	@Override
 	protected void onPostExecute(Void result) {
 		super.onPostExecute(result);
-		mProgressDialog.setProgress(dMax);
-		mProgressDialog.cancel();
-		Activity activity = (Activity) context;
-		activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+		CProgressBar.finishProgress();
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
 		Editor ed = sp.edit();
 		ed.putBoolean("FL", true);
@@ -132,10 +97,8 @@ class MyTask extends AsyncTask<Void, Integer, Void> {
 	@Override
 	protected void onProgressUpdate(Integer... progress) {
 		super.onProgressUpdate();
-		if (!mProgressDialog.isShowing()) {
-			mProgressDialog.show();
-		}
-		mProgressDialog.setProgress(progress[0]);
+		CProgressBar.setProgress(progress[0]);
+		
 
 	}
 }

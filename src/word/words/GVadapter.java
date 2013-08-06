@@ -36,11 +36,11 @@ public class GVadapter extends ArrayAdapter<String> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		// ViewHolder буферизирует оценку различных полей шаблона элемента
+		// ViewHolder Р±СѓС„РµСЂРёР·РёСЂСѓРµС‚ РѕС†РµРЅРєСѓ СЂР°Р·Р»РёС‡РЅС‹С… РїРѕР»РµР№ С€Р°Р±Р»РѕРЅР° СЌР»РµРјРµРЅС‚Р°
 
 		ViewHolder holder;
-		// Очищает сущетсвующий шаблон, если параметр задан
-		// Работает только если базовый шаблон для всех классов один и тот же
+		// РћС‡РёС‰Р°РµС‚ СЃСѓС‰РµС‚СЃРІСѓСЋС‰РёР№ С€Р°Р±Р»РѕРЅ, РµСЃР»Рё РїР°СЂР°РјРµС‚СЂ Р·Р°РґР°РЅ
+		// Р Р°Р±РѕС‚Р°РµС‚ С‚РѕР»СЊРєРѕ РµСЃР»Рё Р±Р°Р·РѕРІС‹Р№ С€Р°Р±Р»РѕРЅ РґР»СЏ РІСЃРµС… РєР»Р°СЃСЃРѕРІ РѕРґРёРЅ Рё С‚РѕС‚ Р¶Рµ
 		View rowView = convertView;
 		if (rowView == null) {
 			LayoutInflater inflater = context.getLayoutInflater();
@@ -55,7 +55,7 @@ public class GVadapter extends ArrayAdapter<String> {
 
 		holder.textView.setText(wd.GetChar(position));
 		holder.linearLayout.setBackgroundColor(wd.getColor(position));
-		// Изменение иконки для Windows и iPhone
+		// Р�Р·РјРµРЅРµРЅРёРµ РёРєРѕРЅРєРё РґР»СЏ Windows Рё iPhone
 
 		return rowView;
 	}
