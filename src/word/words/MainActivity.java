@@ -23,7 +23,6 @@ import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Vibrator;
 import android.content.Context;
-import android.app.AlertDialog.Builder;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.view.KeyEvent;
