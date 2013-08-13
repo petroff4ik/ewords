@@ -1,4 +1,4 @@
-
+﻿
 package word.words;
 
 import android.content.Context;
@@ -14,7 +14,7 @@ import android.content.SharedPreferences.Editor;
 
 /**
  * 
- * @author petroff
+ * @author petroff  !
  */
 public class WordsData implements Serializable {
 
