@@ -35,7 +35,7 @@ public class DBConnector implements Serializable {
 		mDataBase = mOpenHelper.getWritableDatabase();
 	}
 
-	// /data/data/word.words/databases/ewords.db
+	// sqlite3 /data/data/word.words/databases/ewords.db
 	private class OpenHelper extends SQLiteOpenHelper {
 
 		Context context;
@@ -78,7 +78,13 @@ public class DBConnector implements Serializable {
 	}
 
 	public Map getWordStatusNo(String lang) {// TODO make check return value
-		String sql = "select wsrc.word as wordSrc, wsrc._id as wordSrcId, words.* from words as wsrc, words, links where (wsrc._id = links.w1id and words._id = links.w2id) and wsrc.status = ? and wsrc.type = ?  ORDER BY RANDOM() LIMIT 1";
+		String sql_link = "";
+		if(lang.equals("en")){
+			sql_link = "wsrc._id = links.w1id and words._id = links.w2id";
+		}else{
+			sql_link = "wsrc._id = links.w2id and words._id = links.w1id";
+		}
+		String sql = "select wsrc.word as wordSrc, wsrc._id as wordSrcId, words.* from words as wsrc, words, links where (" + sql_link + ") and wsrc.status = ? and wsrc.type = ?  ORDER BY RANDOM() LIMIT 1";
 		Cursor mCursor = mDataBase.rawQuery(sql, new String[] { "no", lang });
 		Map<String, String> hashmap = new HashMap<String, String>();
 		if (mCursor.getCount() > 0) {
@@ -94,10 +100,14 @@ public class DBConnector implements Serializable {
 		return hashmap;
 	}
 
-	public Map getWordStatusNo(String lang, String targetWord) {// TODO make
-																// check return
-																// value
-		String sql = "select wsrc.word as wordSrc, wsrc._id as wordSrcId, words.* from words as wsrc, words, links where (wsrc._id = links.w1id and words._id = links.w2id) "
+	public Map getWordStatusNo(String lang, String targetWord) {
+		String sql_link = "";
+		if(lang.equals("en")){
+			sql_link = "wsrc._id = links.w1id and words._id = links.w2id";
+		}else{
+			sql_link = "wsrc._id = links.w2id and words._id = links.w1id";
+		}
+		String sql = "select wsrc.word as wordSrc, wsrc._id as wordSrcId, words.* from words as wsrc, words, links where (" + sql_link + ") "
 				+ "and wsrc.status = ? and wsrc.type = ? and wsrc.word = ? LIMIT 1";
 		Cursor mCursor = mDataBase.rawQuery(sql, new String[] { "no", lang,
 				targetWord });
@@ -153,12 +163,14 @@ public class DBConnector implements Serializable {
 		mDataBase.update(TABLE_NAME, s, " type = ? ", new String[] { langSrc });
 	}
 
-	public Map getWordCheck(String lang, String wordSrcSearch, String like) {// TODO
-		// make
-		// check
-		// return
-		// value
-		String sql = "select wsrc.word as wordSrc, wsrc._id as wordSrcId, words.* from words as wsrc, words, links where (wsrc._id = links.w1id and words._id = links.w2id) and wsrc.status = ? and wsrc.type = ?"
+	public Map getWordCheck(String lang, String wordSrcSearch, String like) {
+		String sql_link = "";
+		if(lang.equals("en")){
+			sql_link = "wsrc._id = links.w1id and words._id = links.w2id";
+		}else{
+			sql_link = "wsrc._id = links.w2id and words._id = links.w1id";
+		}
+		String sql = "select wsrc.word as wordSrc, wsrc._id as wordSrcId, words.* from words as wsrc, words, links where (" + sql_link + ") and wsrc.status = ? and wsrc.type = ?"
 				+ " AND  wsrc.word = ? AND " + like;
 		Cursor mCursor = mDataBase.rawQuery(sql, new String[] { "no", lang,
 				wordSrcSearch });

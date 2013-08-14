@@ -63,9 +63,6 @@ class MyTask extends AsyncTask<Void, Integer, Void> {
 						&& parser.getName().equals("link")) {
 					link.put("w1id", parser.getAttributeValue(0));
 					link.put("w2id", parser.getAttributeValue(1));
-					//db.insert("links", null, link);
-					link.put("w1id", parser.getAttributeValue(1));
-					link.put("w2id", parser.getAttributeValue(0));
 					db.insert("links", null, link);
 				}
 

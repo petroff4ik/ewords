@@ -10,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 import android.content.DialogInterface;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
@@ -23,6 +22,8 @@ import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Vibrator;
 import android.content.Context;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.view.KeyEvent;
@@ -47,7 +48,9 @@ public class MainActivity extends Activity {
 	private int soundApp;
 	boolean loaded = false;
 
-	/** Called when the activity is first created. */
+	/**
+	 * Called when the activity is first created.
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -62,7 +65,6 @@ public class MainActivity extends Activity {
 			this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
 			soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
 			soundPool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
-
 				@Override
 				public void onLoadComplete(SoundPool soundPool, int sampleId,
 						int status) {
@@ -80,24 +82,22 @@ public class MainActivity extends Activity {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage(R.string.words_ended).setCancelable(false).setPositiveButton("Yes",
 					new DialogInterface.OnClickListener() {
-
-						public void onClick(DialogInterface dialog,
-								int id) {
-							wd.resetWords();
-							wd.Restart();
-							adapter.notifyDataSetChanged();
-							setText(wd.getWordEncode(), wd.getWordSrc());
-							dialog.cancel();
-						}
-					}).setNegativeButton("No",
+				public void onClick(DialogInterface dialog,
+						int id) {
+					wd.resetWords();
+					wd.Restart();
+					adapter.notifyDataSetChanged();
+					setText(wd.getWordEncode(), wd.getWordSrc());
+					dialog.cancel();
+				}
+			}).setNegativeButton("No",
 					new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,
+						int id) {
+					finish();
 
-						public void onClick(DialogInterface dialog,
-								int id) {
-							finish();
-
-						}
-					});
+				}
+			});
 			AlertDialog alert = builder.create();
 			alert.show();
 		}
@@ -118,9 +118,11 @@ public class MainActivity extends Activity {
 		setText(WordEncode, WordSrc);
 		adapter = new GVadapter(this, wd.getData(), wd);
 		gvMain = (GridView) findViewById(R.id.gvMain);
+		Display display = getWindowManager().getDefaultDisplay();
+		DisplayMetrics metricsB = new DisplayMetrics();
+		display.getMetrics(metricsB);
 		gvMain.setAdapter(adapter);
 		gvMain.setOnItemClickListener(new OnItemClickListener() {
-
 			public void onItemClick(AdapterView<?> parent, View v,
 					int position, long id) {
 
@@ -181,7 +183,6 @@ public class MainActivity extends Activity {
 		MenuItem menuItem = menu.add("Next word");
 		menuItem.setIcon(R.drawable.ra);
 		menuItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-
 			public boolean onMenuItemClick(MenuItem _menuItem) {
 				wd.nextWord();
 				isNewWorld();
@@ -198,7 +199,6 @@ public class MainActivity extends Activity {
 		MenuItem menuItem2 = menu.add("Search");
 		menuItem2.setIcon(R.drawable.lens);
 		menuItem2.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-
 			public boolean onMenuItemClick(MenuItem _menuItem) {
 				AlertDialog.Builder adb = new AlertDialog.Builder(MainActivity.this);
 				adb.setTitle(R.string.sw);
@@ -207,7 +207,6 @@ public class MainActivity extends Activity {
 				adb.setView(view);
 				AutoCompleteTextView itemDescriptionView = (AutoCompleteTextView) view.findViewById(R.id.autocomplete);
 				itemDescriptionView.setOnEditorActionListener(new OnEditorActionListener() {
-
 					@Override
 					public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 						if (actionId == EditorInfo.IME_ACTION_DONE) {

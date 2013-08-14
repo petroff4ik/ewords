@@ -1,4 +1,4 @@
-﻿
+
 package word.words;
 
 import android.content.Context;
