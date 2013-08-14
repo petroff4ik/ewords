@@ -22,8 +22,6 @@ import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Vibrator;
 import android.content.Context;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.view.KeyEvent;
@@ -118,9 +116,6 @@ public class MainActivity extends Activity {
 		setText(WordEncode, WordSrc);
 		adapter = new GVadapter(this, wd.getData(), wd);
 		gvMain = (GridView) findViewById(R.id.gvMain);
-		Display display = getWindowManager().getDefaultDisplay();
-		DisplayMetrics metricsB = new DisplayMetrics();
-		display.getMetrics(metricsB);
 		gvMain.setAdapter(adapter);
 		gvMain.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v,
