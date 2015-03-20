@@ -22,6 +22,7 @@ import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Vibrator;
 import android.content.Context;
+import android.util.Log;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.view.KeyEvent;
@@ -33,7 +34,7 @@ public class MainActivity extends Activity {
 	GridView gvMain;
 	GVadapter adapter;
 	private static final String TAG = "MainActivity";
-	WordsData wd;
+	public WordsData wd;
 	TextView we;
 	TextView ws;
 	MyToast myToast;
